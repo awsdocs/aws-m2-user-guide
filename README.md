@@ -1,11 +1,6 @@
-## AWS Mainframe Modernization documentation (preview)
+## AWS Mainframe Modernization user guide (preview)
 
-This repo contains the current preview documentation for AWS Mainframe Modernization. You can create pull requests against this repo to notify the current tech writer (that's me) of necessary corrections. The entry point of the docs ToC is at [index](doc_source/index.md).
-
-Be sure to:
-
-* Change the title in this README
-* Edit your repository description on GitHub
+This repo contains the open source version of the AWS Mainframe Modernization user guide. To submit feedback or requests for changes, submit an issue or make changes and submit a pull request. The entry point of the docs ToC is at [index](doc_source/index.md).
 
 ## Security
 
