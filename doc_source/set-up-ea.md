@@ -1,6 +1,6 @@
 # Setting up Enterprise Analyzer on Amazon AppStream<a name="set-up-ea"></a>
 
-This document describes how to set up Micro Focus Enterprise Analyzer to analyze one or more mainframe applications\. The Enterprise Analyzer tool provides several reports based on the analysis of the application source code and system definitions\.
+This document describes how to set up Micro Focus Enterprise Analyzer to analyze one or more mainframe applications\. The Enterprise Analyzer tool provides several reports based on the analysis of the application source code and system definitions\. All details around the use of the product can be obtained from [Microfocus online documentation](https://www.microfocus.com/documentation/enterprise-analyzer/ea70/).
 
 This setup is designed to foster team collaboration while remaining simple to install: an Amazon S3 bucket is used to share the source code via virtual disks \(leveraging Rclone\) on the Windows machine and a common Amazon RDS instance \(running PostgreSQL\) allows access to all requested reports by any member of the team\.
 
