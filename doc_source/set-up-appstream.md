@@ -5,8 +5,9 @@ This document is intended for members of the customer operations team\. It descr
 These stacks allow the customer application teams to use Enterprise Analyzer and Enterprise Developer directly from their web browsers\. The application files they work on reside either in Amazon S3 buckets or CodeCommit repositories: for more information, see the [Setting up Enterprise Analyzer](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/set-up-ea.pdf) and [Setting up Enterprise Developer](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/set-up-ed.pdf) tutorials\.
 
 **Important**  
-Before trying to start an Amazon AppStream fleet, make sure that the Amazon AppStream images for Enterprise Analyzer and Enterprise Developer, named m2\-enterprise\-analyzer\-v7\.0\.1\.R1 and m2\-enterprise\-developer\-v7\.0\.3\.R1 in their initial version, are shared by AWS Mainframe Modernization with your account\.  
-This sharing is triggered by clicking on the various links pointing to Amazon AppStream from the AWS Mainframe Modernization console\. You can validate this sharing by scanning the list of images available in your account in the Amazon AppStream console\. Choose **Images**, then **Image Registry**\. Those images are usually toward the end of the long list of available images\.
+The steps in this tutorial are based on the downloadable AWS CloudFormation template [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\.  
+Before trying to start an Amazon AppStream fleet, make sure that the Amazon AppStream images for Enterprise Analyzer and Enterprise Developer, named `m2-enterprise-analyzer-v7.0.1.R1` and `m2-enterprise-developer-v7.0.3.R1` are shared by AWS Mainframe Modernization with your account\.  
+This sharing is triggered by clicking on the various links pointing to Amazon AppStream from the AWS Mainframe Modernization console\. You can validate this sharing by searching the list of images available in your account in the Amazon AppStream console\. Choose **Images**, then **Image Registry**, then filter the list by m2\.
 
 **Topics**
 + [Step 1: Manage users and data](#tutorial-aas-step1)
@@ -41,7 +42,7 @@ You must create one Amazon AppStream fleet for each of the Enterprise Analyzer a
 
 The pricing of Amazon AppStream is defined on the [AppStream 2\.0 pricing](http://aws.amazon.com/appstream2/pricing/) page\. The additional fee for use of Enterprise Analyzer and Enterprise Developer is defined on the pricing page for AWS Mainframe Modernization\. For more information, see [AWS Mainframe Modernization Pricing](http://aws.amazon.com/mainframe-modernization/pricing/edrf)\.
 
-You can use an AWS CloudFormation template to automate the creation of the fleets and stacks\. During onboarding to AWS Mainframe Modernization, we provide a template named `cfn-m2-appstream-fleet-ea-ed.yaml` to the customer\. The current version of the template uses the **Default Internet Access** option in Amazon AppStream\. Upcoming versions of this AWS CloudFormation template will allow for more advanced versions \(private subnets, with or without NAT and Internet Gateway, etc\.\) For various possible options, see [Internet Access](https://docs.aws.amazon.com/appstream2/latest/developerguide/internet-access.html)\. 
+You can use an AWS CloudFormation template to automate the creation of the fleets and stacks\. We provide a template that you can download named [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\. The current version of the template uses the **Default Internet Access** option in Amazon AppStream\. Upcoming versions of this AWS CloudFormation template will allow for more advanced versions \(private subnets, with or without NAT and Internet Gateway, etc\.\) For various possible options, see [Internet Access](https://docs.aws.amazon.com/appstream2/latest/developerguide/internet-access.html)\. 
 
 To use this template, you must adapt at a minimum the following four parameters to the context of the customer AWS account:
 + AppStreamApplication: `ea` or `ed`\.
@@ -52,9 +53,9 @@ To use this template, you must adapt at a minimum the following four parameters 
 To use AWS CloudFormation Stacks, see [Working with stacks](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacks.html) in the *AWS CloudFormation User Guide*\.
 
 **Important**  
-It is essential to get the fleets running properly so that they obtain access to the product license in real\-time\. This access is possible only if you assign them an execution role using the definitions made in the AWS CloudFormation template for the `s3:PutObject` and `sts:AssumeRole` credentials\. If you don't use the provided template, or if you modify it, be sure to keep the role security definitions unchanged\. Similarly, if you define the fleets and stacks in another way, such as the console or CLI, make sure the role policy definition is identical to the following JSON\.
+It is essential to get the fleets running properly so that they obtain access to the product license in real\-time\. This access is possible only if you assign them an execution role using the definitions made in the AWS CloudFormation template \([cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\) for the `s3:PutObject` and `sts:AssumeRole` credentials\. If you don't use the provided template, or if you modify it, be sure to keep the role security definitions unchanged\. Similarly, if you define the fleets and stacks in another way, such as the console or CLI, make sure the role policy definition is identical to the following JSON\.
 
-If you define your own fleet and stack in a AWS CloudFormation template, implement the same `AppStreamServiceRole` with the same `AssumeRolePolicyDocument` and `PolicyDocument` as in the sample AWS CloudFormation template, as follows:
+If you define your own fleet and stack in a AWS CloudFormation template, implement the same `AppStreamServiceRole` with the same `AssumeRolePolicyDocument` and `PolicyDocument` as in the sample AWS CloudFormation template \([cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\), as follows:
 
 ```
   AppStreamServiceRole:

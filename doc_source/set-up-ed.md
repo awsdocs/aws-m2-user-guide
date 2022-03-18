@@ -3,6 +3,7 @@
 This document describes how to set up Micro Focus Enterprise Developer for one or more mainframe applications in order to maintain, compile, and test them using the Enterprise Developer features\. The setup is based on the Amazon AppStream Windows images shared by AWS Mainframe Modernization with the customer and on the creation of Amazon AppStream fleets and stacks as described in [Setting up Amazon AppStream for use with AWS Mainframe Modernization Enterprise Analyzer and Enterprise Developer](set-up-appstream.md)\.
 
 **Important**  
+The steps in this tutorial assume that you set up AppStream 2\.0 using the downloadable AWS CloudFormation template [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\. For more information, see [Setting up Amazon AppStream for use with AWS Mainframe Modernization Enterprise Analyzer and Enterprise Developer](set-up-appstream.md)\.  
 You must perform the steps of this setup when the Enterprise Analyzer fleet and stack are up and running\.
 
 For a complete description of Enterprise Developer v7 features and deliverables, check out its check out its [up\-to\-date online documentation \(v7\.0\)](https://www.microfocus.com/documentation/enterprise-developer/ed70/ED-Eclipse/GUID-8D6B7358-AC35-4DAF-A445-607D8D97EBB2.html) on the Micro Focus site\.

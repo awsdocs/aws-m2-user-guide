@@ -9,13 +9,14 @@ The virtual Amazon S3\-backed disk can also be mounted on personal machines of t
 The setup is based on the Amazon AppStream Windows images shared by AWS Mainframe Modernization with the customer and on the creation of Amazon AppStream fleets and stacks as described in [Setting up Amazon AppStream for use with AWS Mainframe Modernization Enterprise Analyzer and Enterprise Developer](set-up-appstream.md)\.
 
 **Important**  
+The steps in this tutorial assume that you set up AppStream 2\.0 using the downloadable AWS CloudFormation template [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\. For more information, see [Setting up Amazon AppStream for use with AWS Mainframe Modernization Enterprise Analyzer and Enterprise Developer](set-up-appstream.md)\.  
 You must perform the steps of this setup when the Enterprise Analyzer fleet and stack are up and running\.
 
 For a complete description of Enterprise Analyzer v7 features and deliverables, check out its [up\-to\-date online documentation \(v7\.0\)](https://www.microfocus.com/documentation/enterprise-analyzer/ea70/EA/GUID-ACFC46C4-1983-46B8-B911-DE3559193D7D.html) on the Micro Focus site\.
 
 In addition to Enterprise Analyzer itself, the image also offers [pgAdmin](https://www.pgadmin.org/), the feature\-rich database administration and development platform for PostgreSQL, for direct access to the Enterprise Analyzer Amazon RDS database, if needed\. Finally, git\-scm tools are also installed to allow for efficient interactions with git repositories \(such as AWS CodeCommit\), potentially used to store application source code in the context of the global migration / transformation project\.
 
-If you want to explore the service without using your own code, you can use the source code, sample data and system definitions of the sample BankDemo application, which are available in the `C.\Users\Public\BankDemo` folder of the Amazon AppStream Windows instance\.
+If you want to explore the service without using your own code, you can use the source code, sample data and system definitions of the sample BankDemo application, which are available in the `C:\Users\Public\BankDemo` folder of the Amazon AppStream Windows instance\.
 
 **Topics**
 + [Prerequisites](#tutorial-ea-prerequisites)

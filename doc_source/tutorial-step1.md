@@ -1,6 +1,6 @@
 # Use Case 1 \- Using the COBOL Project Template containing source components<a name="tutorial-step1"></a>
 
-This use case requires you to copy the source components into the Template directory structure as part of the demo pre setup steps\. In the `BANKDEMO_AWS_NEW_231121.zip` this has been changed from the original `AWSTemplates.zip` delivery to avoid having two copies of the source\.
+This use case requires you to copy the source components into the Template directory structure as part of the demo pre setup steps\. In the [https://d1vi4vxke6c2hu.cloudfront.net/demo/bankdemo.zip](https://d1vi4vxke6c2hu.cloudfront.net/demo/bankdemo.zip) this has been changed from the original `AWSTemplates.zip` delivery to avoid having two copies of the source\.
 
 1. Start Enterprise Developer and specify the chosen workspace\.  
 ![\[Select a directory as workspace\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ed-uc1-step1.png)

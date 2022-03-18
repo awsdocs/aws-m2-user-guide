@@ -4,14 +4,19 @@ This tutorial demonstrates how to use the AWS Mainframe Modernization Micro Focu
 
 AWS CodeBuild is a fully managed continuous integration service that compiles source code, runs tests, and produces software packages that are ready to deploy\. With CodeBuild, you can use prepackaged build environments, or you can create custom build environments that use your own build tools\. This demo scenario uses the second option\. It consists of a CodeBuild build environment using a pre\-packaged Docker image that contains the Micro Focus Build Tools\.
 
+**Important**  
+Before you start your mainframe modernization project, we recommend that you learn about the [AWS Migration Acceleration Program \(MAP\) for Mainframe](https://aws.amazon.com/migration-acceleration-program/mainframe/) or contact [AWS mainframe specialists](mailto: mainframe@amazon.com) to learn about the required steps for modernizing a mainframe application\.
+
 **Topics**
-+ [Prerequisite](#tutorial-build-prerequisites)
++ [Prerequisites](#tutorial-build-prerequisites)
 + [Step 1: Compile the BankDemo source code using CodeBuild](#tutorial-build-step1)
 
-## Prerequisite<a name="tutorial-build-prerequisites"></a>
+## Prerequisites<a name="tutorial-build-prerequisites"></a>
 
-Before you start this tutorial, complete the following prerequisite\.
+Before you start this tutorial, complete the following prerequisites\.
++ Obtain the Docker image used in this tutorial from your mainframe specialist\. Currently this image is not publicly available\.
 + Install the AWS CLI\. For more information, see [Installing or updating the latest version of the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) in the *https://docs\.aws\.amazon\.com/cli/latest/userguide/*\.
++ Download the [BankDemo sample application](https://d1vi4vxke6c2hu.cloudfront.net/demo/bankdemo_runtime.zip)\.
 
 ## Step 1: Compile the BankDemo source code using CodeBuild<a name="tutorial-build-step1"></a>
 
@@ -107,7 +112,7 @@ Follow these steps to compile the BankDemo source code using CodeBuild:
      }'
    ```
 **Note**  
-If you are storing the Docker image for the Micro Focus Build Tools at Amazon Elastic Container Registry, you have to add additional permissions to the preceding policy:
+To obtain the Docker image, you must be working with an AWS mainframe specialist\. They can obtain the image for you\. If you are storing the Docker image for the Micro Focus Build Tools at Amazon Elastic Container Registry, you have to add additional permissions to the preceding policy:
 
    ```
     {
