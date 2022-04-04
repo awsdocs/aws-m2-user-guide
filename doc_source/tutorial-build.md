@@ -171,7 +171,7 @@ To obtain the Docker image, you must be working with an AWS mainframe specialist
        --source \
          '{
            "type": "S3",
-           "location": "codebuild-*regionId-accountId-input-bucket/"
+           "location": "codebuild-regionId-accountId-input-bucket/"
          }' \
        --artifacts \
          '{
