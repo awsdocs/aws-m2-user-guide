@@ -26,6 +26,8 @@ AWS Mainframe Modernization configures server side encryption \(SSE\) on all dep
 
 ## Encryption in transit<a name="encryption-transit"></a>
 
+For interactive applications part of transactional workloads, the data exchanges between the terminal emulator and AWS Mainframe Modernization service endpoint for tn3270 protocol are not encryted in transit. Some additional tunneling mechanisms may be implemented by the customer when encryption in transit is required by the application.
+
 AWS Mainframe Modernization uses HTTPS to encrypt the service APIs\. All other communication within AWS Mainframe Modernization is protected by the service VPC or security group, as well as HTTPS\. AWS Mainframe Modernization transfers application artifacts and configurations\. Application artifacts are copied from an Amazon S3 bucket that you own\. You can provide application configurations using a link to Amazon S3 or by uploading a file locally\.
 
- Encryption in transit is configured by default\. 
+ Encryption in transit is configured by default\.
