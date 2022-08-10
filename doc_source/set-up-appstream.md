@@ -6,7 +6,7 @@ These stacks allow the customer application teams to use Enterprise Analyzer and
 
 **Important**  
 The steps in this tutorial are based on the downloadable AWS CloudFormation template [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\.  
-Before trying to start an Amazon AppStream fleet, make sure that the Amazon AppStream images for Enterprise Analyzer and Enterprise Developer, named `m2-enterprise-analyzer-v7.0.1.R1` and `m2-enterprise-developer-v7.0.3.R1` are shared by AWS Mainframe Modernization with your account\.  
+Before trying to start an Amazon AppStream fleet, make sure that the Amazon AppStream images for Enterprise Analyzer and Enterprise Developer, named `m2-enterprise-analyzer-v7.0.4.R1` and `m2-enterprise-developer-v7.0.7.R1` are shared by AWS Mainframe Modernization with your account\.  
 This sharing is triggered by clicking on the various links pointing to Amazon AppStream from the AWS Mainframe Modernization console\. You can validate this sharing by searching the list of images available in your account in the Amazon AppStream console\. Choose **Images**, then **Image Registry**, then filter the list by m2\.
 
 **Topics**
