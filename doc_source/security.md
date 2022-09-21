@@ -8,9 +8,15 @@ Security is a shared responsibility between AWS and you\. The [shared responsibi
 
 This documentation helps you understand how to apply the shared responsibility model when using AWS Mainframe Modernization\. It shows you how to configure AWS Mainframe Modernization to meet your security and compliance objectives\. You also learn how to use other AWS services that help you to monitor and secure your AWS Mainframe Modernization resources\.
 
+AWS Mainframe Modernization provides its own IAM\-protected resources \(application, environment, deployment etc\), which are the AWS Mainframe Modernization administrative resources, on which any action must be allowed by IAM policies\.
+
+AWS Mainframe Modernization for replatforming using is also secured by IAM\. IAM grants or denies permission to a principal for a specific action on a defined resource, derived from the original mainframe environment, through standard IAM policies as well\. The AWS Mainframe Modernization replatforming runtime calls the IAM authorization service when an application attempts such action on a protected resource\. IAM will return allow or deny based on standard IAM policy evaluation mechanisms\.
+
 **Topics**
 + [Data protection](data-protection.md)
-+ [Identity and access management](security-iam.md)
++ [Identity and Access Management](security-iam.md)
 + [Compliance validation](compliance-validation.md)
 + [Resilience](disaster-recovery-resiliency.md)
 + [Infrastructure security](infrastructure-security.md)
++ [Tutorial: Blu Age Application Security in AWS Mainframe Modernization](security-app-ba.md)
++ [AWS PrivateLink](vpc-interface-endpoints.md)

@@ -1,182 +1,168 @@
-# Setting up Amazon AppStream for use with AWS Mainframe Modernization Enterprise Analyzer and Enterprise Developer<a name="set-up-appstream"></a>
+# Tutorial: Set up AppStream 2\.0 for use with Micro Focus Enterprise Analyzer and Micro Focus Enterprise Developer<a name="set-up-appstream"></a>
 
-This document is intended for members of the customer operations team\. It describes how to set up Amazon AppStream fleets and stacks to host the Micro Focus Enterprise Analyzer and Micro Focus Enterprise Developer tools used with AWS Mainframe Modernization\. 
-
-These stacks allow the customer application teams to use Enterprise Analyzer and Enterprise Developer directly from their web browsers\. The application files they work on reside either in Amazon S3 buckets or CodeCommit repositories: for more information, see the [Setting up Enterprise Analyzer](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/set-up-ea.pdf) and [Setting up Enterprise Developer](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/set-up-ed.pdf) tutorials\.
+This document is intended for members of the customer operations team\. It describes how to set up Amazon AppStream 2\.0 fleets and stacks to host the Micro Focus Enterprise Analyzer and Micro Focus Enterprise Developer tools used with AWS Mainframe Modernization\. Micro Focus Enterprise Analyzer is usually used during the Assess phase and Micro Focus Enterprise Developer is usually used during the Migrate and Modernize phase of the AWS Mainframe Modernization approach\. If you plan to use both Enterprise Analyzer and Enterprise Developer you must create separate fleets and stacks for each tool\. Each tool requires its own fleet and stack because their licensing terms are different\.
 
 **Important**  
 The steps in this tutorial are based on the downloadable AWS CloudFormation template [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\.  
-Before trying to start an Amazon AppStream fleet, make sure that the Amazon AppStream images for Enterprise Analyzer and Enterprise Developer, named `m2-enterprise-analyzer-v7.0.4.R1` and `m2-enterprise-developer-v7.0.7.R1` are shared by AWS Mainframe Modernization with your account\.  
-This sharing is triggered by clicking on the various links pointing to Amazon AppStream from the AWS Mainframe Modernization console\. You can validate this sharing by searching the list of images available in your account in the Amazon AppStream console\. Choose **Images**, then **Image Registry**, then filter the list by m2\.
 
 **Topics**
-+ [Step 1: Manage users and data](#tutorial-aas-step1)
-+ [Step 2: Create fleets and stacks](#tutorial-aas-step2)
-+ [Step 3: Clean up resources](#tutorial-aas-step3)
++ [Prerequisites](#tutorial-aas-prerequisites)
++ [Step 1: Get the AppStream 2\.0 images](#tutorial-aas-step1)
++ [Step 2: Create the stack using the AWS CloudFormation template](#tutorial-aas-step2)
++ [Step 3: Create a user in AppStream 2\.0](#tutorial-aas-step3)
++ [Step 4: Log in to AppStream 2\.0](#tutorial-aas-step4)
++ [Step 5: Verify buckets in Amazon S3 \(optional\)](#tutorial-aas-step5)
++ [Next steps](#tutorial-aas-next-steps)
++ [Clean up resources](#tutorial-aas-cleanup)
 
-## Step 1: Manage users and data<a name="tutorial-aas-step1"></a>
+## Prerequisites<a name="tutorial-aas-prerequisites"></a>
++ Download the template: [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\.
++ Get the ID of your default VPC and security group\. For more information on the default VPC, see [Default VPCs](https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html) in the *Amazon VPC User Guide*\. For more information on the default security group, see [Default and custom security groups](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/default-custom-security-groups.html) in the *Amazon EC2 User Guide for Linux Instances*\. 
++ Make sure your IAM user has the following permissions:
+  + create stacks, fleets, and users in AppStream 2\.0\.
+  + create stacks in AWS CloudFormation using a template\.
+  + create buckets and upload files to buckets in Amazon S3\.
+  + download credentials \(`access_key_id` and `secret_access_key`\) from IAM\.
 
-Currently in Amazon AppStream, you use the User Pool feature to manage users \(create them, assign them to stacks, etc\.\)\. You manage users from the customer account\. For more information, see [AppStream 2\.0 User Pools](https://docs.aws.amazon.com/appstream2/latest/developerguide/user-pool.html) in the *Amazon AppStream 2\.0 Administration Guide*\. In particular, for details on executing any of the possible management actions, see [User Pool Administration](https://docs.aws.amazon.com/appstream2/latest/developerguide/user-pool-admin.html) in the *Amazon AppStream 2\.0 Administration Guide*\. 
+## Step 1: Get the AppStream 2\.0 images<a name="tutorial-aas-step1"></a>
 
-You define the user accounts with their email addresses so that Amazon AppStream can notify users when events, such as assignment, happen on the stacks\. Amazon AppStream sends a welcome email when users are added so they can set up their final password and first access\. It is better to define users when at least one stack is running, so that at least one entry is displayed in the Amazon AppStream menu\.
+In this step, you share the AppStream 2\.0 images for Enterprise Analyzer and Enterprise Developer with your AWS account\.
 
-Amazon AppStream supports persistent application settings for Windows\-based stacks\. This means that users' application customizations and Windows settings are automatically saved after each streaming session and applied during the next session\. Examples of persistent application settings that users can configure include, but are not limited to, browser favorites, settings, IDE and application connection profiles, plugins, and UI customizations\. These settings are saved to an Amazon S3 bucket in the customer account, within the AWS Region where application settings persistence is enabled\. The settings are available in each Amazon AppStream streaming session\.
+1. Open the AWS Mainframe Modernization console at [https://console\.aws\.amazon\.com/m2/](https://us-west-2.console.aws.amazon.com/m2/home?region=us-west-2#/)\.
 
-Application Settings persistence saves all files in the `C:\Users\PhotonUser` \(aka `D:\PhotonUser`\) folder, except Contacts, Desktop, Documents, Downloads, Links, Pictures, Saved Games, Searches, and Videos\. Those folders are [Windows 10 symbolic links](https://blogs.windows.com/windowsdeveloper/2016/12/02/symlinks-windows-10/) to a subfolder in `C:\ProgramData\UserDataFolders\`, which is only visible from the specific instance\. We recommend that users avoid storing any data in those unsaved folders\.
+1. In the left navigation, choose **Tools**\.
 
-All details about Application Settings persistence are available in [How Application Settings Persistence Works](https://docs.aws.amazon.com/appstream2/latest/developerguide/how-it-works-app-settings-persistence.html) in the *Amazon AppStream 2\.0 Administration Guide*\. 
+1. In **Analysis, development, and build assets**, choose **Share assets with my AWS account**\.  
+![\[The AWS Mainframe Modernization tools page showing share assets with my AWS account.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/2022-08-17-m2-tools-mf-images.png)
 
-Persistence of home folders is activated for the Enterprise Analyzer and Enterprise Developer stacks\. Users of these stacks can access a persistent storage folder during their application streaming sessions\. No further conﬁguration is required\. Data stored in their home folders is automatically backed up to an Amazon S3 bucket in the AWS account hosting the fleets and stacks and is made available to those users in subsequent sessions\. On the Windows instances, as described here, the home folder of each user is accessible at `C:\Users\PhotonUser\My Files\Home Folder` or at `D:\PhotonUser\My Files\Home Folder`\.
+## Step 2: Create the stack using the AWS CloudFormation template<a name="tutorial-aas-step2"></a>
 
-Consequently, for each Amazon AppStream user, permanent data is stored in two distinct Amazon S3 buckets whose names are fixed as defined by Amazon AppStream:
-+ `appstream2-36fb080bb8-region-account`, which stores the Windows home folders of the fleet users under path `user/ > userpool/`\.
+In this step, you use the downloaded AWS CloudFormation template to create an AppStream 2\.0 stack and fleet for running Micro Focus Enterprise Analyzer\. You can repeat this step later to create another AppStream 2\.0 stack and fleet for running Micro Focus Enterprise Developer, since each tool requires its own fleet and stack in AppStream 2\.0\. For more information on AWS CloudFormation stacks, see [Working with stacks](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacks.html) in the *AWS CloudFormation User Guide*\.
+
 **Note**  
-By design, the home folder is unique across all Amazon AppStream fleets of a given account\. For Enterprise Analyzer and Enterprise Developer, data stored in the home folder by a given user in the Enterprise Analyzer fleet instance is also visible in the home folder when the same user is connected to an Enterprise Developer instance\. The Amazon S3 bucket sub\-folder is named using an SHA\-256 hash of the user’s name\. Account administrators must compute this hash for a given user name if they need to access the home folder of a particular user \(see below\)\.
-+ `appstream-app-settings-region-account-unique value`, where path `> Windows/ > v6/ > Server-2019/ > stack-name/ > userpool > user-SHA256-hash` stores a Windows virtual disk \(Profile\.vhdx – Virtual Windows disk – up to 1 GB\) and corresponding Windows Registry key \(ProfileList\.reg\)\. This disk is attached to the instance when the user starts a session and saved back to Amazon S3 when the session ends\. The Amazon S3 folder name of this disk depends on the stack name because there is one such pair of files per stack assigned to a given user\. The backup and restore process for application settings is described in detail in [How Application Settings Persistence Works](https://docs.aws.amazon.com/appstream2/latest/developerguide/how-it-works-app-settings-persistence.html) in the *Amazon AppStream 2\.0 Administration Guide*\.
+AWS Mainframe Modernization adds an additional fee to the standard AppStream 2\.0 pricing for the use of Enterprise Analyzer and Enterprise Developer\. For more information, see [AWS Mainframe Modernization Pricing](http://aws.amazon.com/mainframe-modernization/pricing/)\.
 
-To locate the home folder for a specific user, use a service computing online SHA256 hash\. For example, by going to [Online Tools \- SHA256](https://emn178.github.io/online-tools/sha256.html) and entering `foo@bar.com` as the user name, the service will return `0c7e6a405862e402eb76a70f8a26fc732d07c32931e9fae9ab1582911d2e8a3b`, which is the name of the Amazon S3 subfolder for this user\.
+1. Download the [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml) template, if necessary\.
 
-## Step 2: Create fleets and stacks<a name="tutorial-aas-step2"></a>
+1. Open the AWS CloudFormation console and choose **Create Stack**\.
 
-You must create one Amazon AppStream fleet for each of the Enterprise Analyzer and Enterprise Developer images\. Then create one Amazon AppStream stack per fleet, and assign the stack to the corresponding fleet\. The required Windows images are shared in the customer account \(for running only – NOT for building on top\) from the AWS Mainframe Modernization service account during the customer onboarding process\. The initial versions of these images are `m2-enterprise-analyzer-v7.0.1.R1` and `m2-enterprise-developer-v7.0.3.R1`\. The version suffix will change as new versions of those images are produced\. When shared, they appear in the AppStream 2\.0 console page under **Images > Image Registry**, usually at the end of the list, where service\-provided images come first\.
+1. In **Prerequisite \- Prepare template**, choose **Template is ready**\.
 
-The pricing of Amazon AppStream is defined on the [AppStream 2\.0 pricing](http://aws.amazon.com/appstream2/pricing/) page\. The additional fee for use of Enterprise Analyzer and Enterprise Developer is defined on the pricing page for AWS Mainframe Modernization\. For more information, see [AWS Mainframe Modernization Pricing](http://aws.amazon.com/mainframe-modernization/pricing/edrf)\.
+1. In **Specify Template**, choose **Upload a template file**\.
 
-You can use an AWS CloudFormation template to automate the creation of the fleets and stacks\. We provide a template that you can download named [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\. The current version of the template uses the **Default Internet Access** option in Amazon AppStream\. Upcoming versions of this AWS CloudFormation template will allow for more advanced versions \(private subnets, with or without NAT and Internet Gateway, etc\.\) For various possible options, see [Internet Access](https://docs.aws.amazon.com/appstream2/latest/developerguide/internet-access.html)\. 
+1. In **Upload a template file**, choose **Choose file** and upload the [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml) template\.
 
-To use this template, you must adapt at a minimum the following four parameters to the context of the customer AWS account:
-+ AppStreamApplication: `ea` or `ed`\.
-+ AppStreamImageName: `m2-enterprise-analyzer-v7.0.1.R1` or `m2-enterprise-developer-v7.0.3.R1`, depending on the application\.
-+ AppStreamFleetVpcSubnet: make sure you specify a subnet of the default VPC\.
-+ AppStreamFleetSecurityGroup: make sure you specify the default security group of the default VPC\.
+1. Choose **Next**\.  
+![\[The AWS CloudFormation create stack page showing the cfn-m2-appstream-fleet-ea-ed.yaml template selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/cfn-create-stack.png)
 
-To use AWS CloudFormation Stacks, see [Working with stacks](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacks.html) in the *AWS CloudFormation User Guide*\.
+1. On **Specify stack details**, enter the following information:
+   + In **Stack name**, enter a name of your choice\. For example, **m2\-ea**\.
+   + In **AppStreamApplication**, choose **ea**\.
+   + In **AppStreamFleetSecurityGroup**, choose your default VPC’s default security group\.
+   + In **AppStreamFleetVpcSubnet**, choose a subnet within your default VPC\.
+   + In **AppStreamImageName**, choose the image starting with `m2-enterprise-analyzer`\.
+   + Accept the defaults for the other fields, then choose **Next**\.  
+![\[The AWS CloudFormation specify stack details page with Enterprise Analyzer options filled in.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/cfn-specify-stack-details.png)
 
-**Important**  
-It is essential to get the fleets running properly so that they obtain access to the product license in real\-time\. This access is possible only if you assign them an execution role using the definitions made in the AWS CloudFormation template \([cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\) for the `s3:PutObject` and `sts:AssumeRole` credentials\. If you don't use the provided template, or if you modify it, be sure to keep the role security definitions unchanged\. Similarly, if you define the fleets and stacks in another way, such as the console or CLI, make sure the role policy definition is identical to the following JSON\.
+1. Accept all defaults, then choose **Next** again\.
 
-If you define your own fleet and stack in a AWS CloudFormation template, implement the same `AppStreamServiceRole` with the same `AssumeRolePolicyDocument` and `PolicyDocument` as in the sample AWS CloudFormation template \([cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\), as follows:
+1. On **Review**, make sure all the parameters are what you intend\.
 
-```
-  AppStreamServiceRole:
-    Type: AWS::IAM::Role
-    DeletionPolicy: Delete
-    Properties:
-      RoleName: !Join
-                  - ''
-                  -  - 'm2-appstream-fleet-service-role-'
-                     - !Ref AppStreamApplication
-                     - !Select [0, !Split ['-', !Select [2, !Split [/, !Ref AWS::StackId ]]]]
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - 'appstream.amazonaws.com'
-            Action: 'sts:AssumeRole'
-      Path: /
-      Policies:
-        - PolicyName: !Join
-                        - ''
-                        -  - 'm2-appstream-fleet-service-policy-'
-                           - !Ref AppStreamApplication
-                           - !Select [0, !Split ['-', !Select [2, !Split [/, !Ref AWS::StackId ]]]]
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - 'sts:AssumeRole'
-                Resource: 
-                  - '*'
-              - Effect: Allow
-                Action:
-                  - 's3:PutObject'
-                Resource: 
-                  - !Sub 'arn:aws:s3:::aws-m2-repo-*-${AWS::Region}-prod/*'
-```
+1. Scroll to the bottom, choose **I acknowledge that AWS CloudFormation might create IAM resources with custom names**, and choose **Create Stack**\.
 
-We recommend that you use AWS CloudFormation\. If you make the IAM definitions interactively using the AWS Console, make sure to define your IAM elements as follows, and replace `us-west-2` with the AWS region in which your fleet is running:
+It takes between 20 and 30 minutes for the stack and fleet to be created\. You can choose **Refresh** to see the AWS CloudFormation events as they occur\.  
 
-Trust Policy:
+## Step 3: Create a user in AppStream 2\.0<a name="tutorial-aas-step3"></a>
 
-```
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "appstream.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-```
+While you are waiting for AWS CloudFormation to finish creating the stack, you can create one or more users in AppStream 2\.0\. These users are those who will be using Enterprise Analyzer in AppStream 2\.0\. You will need to specify an email address for each user, and each user needs to correspond to an IAM user with sufficient permissions to create buckets in Amazon S3, upload files to a bucket, and link to a bucket to map its contents\.
 
-Authorization Policy:
+1. Open the AppStream 2\.0 console\.
 
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Action": [
-                "sts:AssumeRole"
-            ],
-            "Resource": [
-                "*"
-            ],
-            "Effect": "Allow"
-        },
-        {
-            "Action": [
-                "s3:PutObject"
-            ],
-            "Resource": [
-                "arn:aws:s3:::aws-m2-repo-*-us-west-2-prod/*"
-            ],
-            "Effect": "Allow"
-        }
-    ]
-}
-```
+1. In the left navigation, choose **User pool**\.
 
-The additional important parameters are as follows, in case account administrators need to change them when creating the fleets and stacks manually or automatically\.
+1. Choose **Create user**\.
 
-### Fleet creation<a name="appstream-fleet-creation"></a>
+1. Provide an email address where the user can receive an email invitation to use AppStream 2\.0, a first name and last name, and choose **Create user**\.
 
-Create fleets based on [Create an AppStream 2\.0 Fleet and Stack](https://docs.aws.amazon.com/appstream2/latest/developerguide/set-up-stacks-fleets.html)\. The key parameters are as follows:
-+ Fleet type: **Always\-on** provides users instant\-on access to their apps\. You will be charged for all running instances in your fleet even if no users are streaming apps\. **On\-Demand** optimizes your streaming costs\. With an on\-demand fleet, users will experience a start time of about one to two minutes for their session\. However, you will only be charged the streaming instance fees when users are connected, and a small hourly fee for each instance in the fleet that is not streaming apps\. For pricing information, see [AppStream 2\.0 pricing](http://aws.amazon.com/appstream2/pricing/)\.
-+ Instance type: choose **General Purpose stream\.standard\.large**\. For pricing information, see [ AppStream 2\.0 pricing](http://aws.amazon.com/appstream2/pricing/)\.
-+ Capacity: adjust to accommodate the expected number of concurrent users\.
-+ Stream View: choose **Desktop** to allow users to launch other Windows applications \(such as Command Prompt, File Explorer, browser, etc\.\) if needed\.
-+ Image: choose **image\-m2\-ea** or **image\-m2\-ed**\.
-+ **Default internet access**: selected\.
-+ **VPC, subnets & security group**: choose the default VPC, and its corresponding subnets and default security group\.
+1. Repeat if necessary to create more users\. The email address for each user must be unique\.
 
-### Stack Creation<a name="appstream-stack-creation"></a>
+For more information on creating AppStream 2\.0 users, see [AppStream 2\.0 User Pools](https://docs.aws.amazon.com/appstream2/latest/developerguide/user-pool.html) in the *Amazon AppStream 2\.0 Administration Guide*\.
 
-Create stacks based on [Create an AppStream 2\.0 Fleet and Stack](https://docs.aws.amazon.com/appstream2/latest/developerguide/set-up-stacks-fleets.html)\. The important parameters are as follows:
-+ **Fleet**: select the fleet that you just created\.
-+ **Enable Home folders**: selected\.
-+ **Google Drive for G Suite** and **OneDrive**: to avoid data leaks to an uncontrolled environment, do not choose\.
+When AWS CloudFormation finishes creating the stack, you can assign the user you created to the stack, as follows:
 
-All user experience parameters following these can retain their default values\.
+1. Open the AppStream 2\.0 console\.
 
-In particular, make sure that the **Settings Group** remains distinct for each of the Enterprise Analyzer and Enterprise Developer stacks\. The settings group determines which saved application settings are used for a streaming session from this stack\. If the same settings group is applied to another stack, both stacks use the same application settings\. By default, the settings group value is the name of the stack\. We recommend that you retain this set up to avoid confusion between the Enterprise Analyzer and Enterprise Developer stacks\.
+1. Choose the user name\.
 
-When the fleet is in the `Running` state and the attached stack is in the `Active` state, you can grant users access to the Windows instances by choosing **AppStream 2\.0 > User Pool**, selecting a user for the **Assign Stack** action, and choosing the desired stack in the list\. The associated checkmark will trigger sending an email to the user to announce the newly granted access and provide the corresponding streaming URL\.
+1. Choose **Action**, then **Assign stack**\.
 
-## Step 3: Clean up resources<a name="tutorial-aas-step3"></a>
+1. In **Assign stack**, choose the stack that begins with `m2-appstream-stack-ea`\.
+
+1. Choose **Assign stack**\.  
+![\[The AppStream 2.0 assign stack page showing a user and the Enterprise Analyzer stack to be assigned.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/aas-assign-stack.png)
+
+Assigning a user to a stack causes AppStream 2\.0 to send an email to the user at the address you provided\. This email contains a link to the AppStream 2\.0 login page\.
+
+## Step 4: Log in to AppStream 2\.0<a name="tutorial-aas-step4"></a>
+
+In this step, you log in to AppStream 2\.0 using the link in the email sent by AppStream 2\.0 to the user you created in [Step 3: Create a user in AppStream 2\.0](#tutorial-aas-step3)\.
+
+1. Log in to AppStream 2\.0 using the link provided in the email sent by AppStream 2\.0\.
+
+1. Change your password, if prompted\. The AppStream 2\.0 screen that you see is similar to the following:  
+![\[A sample AppStream 2.0 login screen showing the desktop icon.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/aas-login-screen.png)
+
+1. Choose **Desktop**\.
+
+1. On the task bar, choose **Search** and enter **D:** to navigate to the Home Folder\.
+**Note**  
+If you skip this step, you might get a `Device not ready` error when you try to access the Home Folder\.
+
+At any point, if you have trouble signing into AppStream 2\.0, you can restart your AppStream 2\.0 fleet and try to sign in again, using the following steps\.
+
+1. Open the AppStream 2\.0 console\.
+
+1. In the left navigation, choose **Fleets**\.
+
+1. Choose the fleet you are trying to use\.
+
+1. Choose **Action**, then choose **Stop**\.
+
+1. Wait for the fleet to stop\.
+
+1. Choose **Action**, then choose **Start**\.
+
+This process can take around 10 minutes\.
+
+## Step 5: Verify buckets in Amazon S3 \(optional\)<a name="tutorial-aas-step5"></a>
+
+One of the tasks completed by the AWS CloudFormation template you used to create the stack was to create two buckets in Amazon S3, which are necessary to save and restore user data and application settings across work sessions\. These buckets are as follows:
++ Name starts with `appstream2-`\. This bucket maps data to your Home Folder in AppStream 2\.0 \(`D:\PhotonUser\My Files\Home Folder`\)\.
+**Note**  
+The Home Folder is unique for a given email address and is shared across all fleets and stacks in a given AWS account\. The name of the Home Folder is a SHA256 hash of the user’s email address, and is stored on a path based on that hash\.
++ Name starts with `appstream-app-settings-`\. This bucket contains user session information for AppStream 2\.0, and includes settings such as browser favorites, IDE and application connection profiles, and UI customizations\. For more information, see [How Application Settings Persistence Works](https://docs.aws.amazon.com/appstream2/latest/developerguide/how-it-works-app-settings-persistence.html) in the *Amazon AppStream 2\.0 Administration Guide*\.
+
+To verify that the buckets were created, follow these steps:
+
+1. Open the Amazon S3 console\.
+
+1. In the left navigation, choose **Buckets**\.
+
+1. In **Find buckets by name**, enter **appstream** to filter the list\.
+
+If you see the buckets, no further action is necessary\. Just be aware that the buckets exist\. If you do not see the buckets, then either the AWS CloudFormation template is not finished running, or an error occurred\. Go to the AWS CloudFormation console and review the stack creation messages\.
+
+## Next steps<a name="tutorial-aas-next-steps"></a>
+
+Now that the AppStream 2\.0 infrastructure is set up, you can set up and start using Enterprise Analyzer\. For more information, see [Tutorial: Set up Enterprise Analyzer on AppStream 2\.0](set-up-ea.md)\. You can also set up Enterprise Developer\. For more information, see [Tutorial: Set up Micro Focus Enterprise Developer on AppStream 2\.0](set-up-ed.md)\.
+
+## Clean up resources<a name="tutorial-aas-cleanup"></a>
 
 The procedure to clean up the created stack and fleets is described in [Create an AppStream 2\.0 Fleet and Stack](https://docs.aws.amazon.com/appstream2/latest/developerguide/set-up-stacks-fleets.html)\.
 
-When the Amazon AppStream objects have been deleted, the account administrator can also, if appropriate, clean up the Amazon S3 buckets for Application Settings and Home Folders\.
+When the AppStream 2\.0 objects have been deleted, the account administrator can also, if appropriate, clean up the Amazon S3 buckets for Application Settings and Home Folders\.
 
 **Note**  
-The home folder for a given user is unique across all fleets, so you might need to retain it if other Amazon AppStream stacks are active in the same account\.
+The home folder for a given user is unique across all fleets, so you might need to retain it if other AppStream 2\.0 stacks are active in the same account\.
 
-Finally, Amazon AppStream does not currently allow you to delete users using the console\. Instead, you must use the service API with the CLI\. For more information, see [User Pool Administration](https://docs.aws.amazon.com/appstream2/latest/developerguide/user-pool-admin.html) in the *Amazon AppStream 2\.0 Administration Guide*\.
+Finally, AppStream 2\.0 does not currently allow you to delete users using the console\. Instead, you must use the service API with the CLI\. For more information, see [User Pool Administration](https://docs.aws.amazon.com/appstream2/latest/developerguide/user-pool-admin.html) in the *Amazon AppStream 2\.0 Administration Guide*\.

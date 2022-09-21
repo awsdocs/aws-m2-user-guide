@@ -5,10 +5,6 @@ Before you can start using AWS Mainframe Modernization you or your administrator
 **Topics**
 + [Sign up for AWS](#setting-up-aws-sign-up)
 + [Create an IAM user](#setting-up-create-iam-user)
-+ [Setting up Amazon AppStream for use with AWS Mainframe Modernization Enterprise Analyzer and Enterprise Developer](set-up-appstream.md)
-+ [Setting up Enterprise Analyzer on Amazon AppStream](set-up-ea.md)
-+ [Setting up Enterprise Developer on Amazon AppStream](set-up-ed.md)
-+ [Using templates with Micro Focus Enterprise Developer](use-templates-ed.md)
 
 ## Sign up for AWS<a name="setting-up-aws-sign-up"></a>
 
@@ -30,7 +26,7 @@ If you do not have an AWS account, complete the following steps to create one\.
 **Note**  
 We strongly recommend that you adhere to the best practice of using the **Administrator** IAM user that follows and securely lock away the root user credentials\. Sign in as the root user only to perform a few [account and service management tasks](https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html)\.
 
-1. In the navigation pane, choose **Users** and then choose **Add user**\.
+1. In the navigation pane, choose **Users** and then choose **Add users**\.
 
 1. For **User name**, enter **Administrator**\.
 

@@ -4,38 +4,64 @@
 *****Copyright &copy; Amazon Web Services, Inc. and/or its affiliates. All rights reserved.*****
 
 -----
-Amazon's trademarks and trade dress may not be used in 
-     connection with any product or service that is not Amazon's, 
-     in any manner that is likely to cause confusion among customers, 
-     or in any manner that disparages or discredits Amazon. All other 
-     trademarks not owned by Amazon are the property of their respective
-     owners, who may or may not be affiliated with, connected to, or 
-     sponsored by Amazon.
+Amazon's trademarks and trade dress may not be used in
+connection with any product or service that is not Amazon's,
+in any manner that is likely to cause confusion among customers,
+or in any manner that disparages or discredits Amazon. All other
+trademarks not owned by Amazon are the property of their respective
+owners, who may or may not be affiliated with, connected to, or
+sponsored by Amazon.
 
 -----
 ## Contents
 + [What is AWS Mainframe Modernization?](what-is-m2.md)
 + [Setting up AWS Mainframe Modernization](setting-up.md)
-   + [Setting up Amazon AppStream for use with AWS Mainframe Modernization Enterprise Analyzer and Enterprise Developer](set-up-appstream.md)
-   + [Setting up Enterprise Analyzer on Amazon AppStream](set-up-ea.md)
-   + [Setting up Enterprise Developer on Amazon AppStream](set-up-ed.md)
-   + [Using templates with Micro Focus Enterprise Developer](use-templates-ed.md)
-      + [Use Case 1 - Using the COBOL Project Template containing source components](tutorial-step1.md)
-      + [Use Case 2 - Using the COBOL Project Template without source components](tutorial-step2.md)
-      + [Use Case 3 - Using the pre-defined COBOL project linking to the source folders](tutorial-step3.md)
-      + [Using the Region Definition JSON Template](tutorial-step4.md)
 + [Getting started with AWS Mainframe Modernization](getting-started.md)
-+ [Concepts](concept-m2.md)
-+ [Tutorials](tutorial-m2.md)
-   + [Managed Runtime Tutorial](tutorial-runtime.md)
-   + [Enterprise Build Tools Tutorial](tutorial-build.md)
+   + [Tutorial: Managed Runtime for Blu Age](tutorial-runtime-ba.md)
+   + [Tutorial: Managed Runtime for Micro Focus](tutorial-runtime.md)
++ [Modernization approach](modernization-m2.md)
++ [Working with applications in AWS Mainframe Modernization](applications-m2.md)
+   + [Create a AWS Mainframe Modernization application](applications-m2-create.md)
+   + [Deploy a AWS Mainframe Modernization application](applications-m2-deploy.md)
+   + [Update a AWS Mainframe Modernization application](applications-m2-update.md)
+   + [Delete a AWS Mainframe Modernization application](applications-m2-delete.md)
+   + [Submit batch jobs for AWS Mainframe Modernization applications](applications-m2-batch-job.md)
+   + [Import data sets for AWS Mainframe Modernization applications](applications-m2-dataset.md)
+   + [AWS Mainframe Modernization application definition reference](applications-m2-definition.md)
++ [Working with runtime environments in AWS Mainframe Modernization](environments-m2.md)
+   + [Create a AWS Mainframe Modernization runtime environment](create-environments-m2.md)
+   + [Update a AWS Mainframe Modernization runtime environment](update-environments-m2.md)
+   + [Delete a AWS Mainframe Modernization runtime environment](delete-environments-m2.md)
++ [AppStream 2.0-based Tools](appstream-tools-m2.md)
+   + [Tutorial: Set up AppStream 2.0 for use with Blu Age Developer IDE](set-up-appstream-ba.md)
+   + [Tutorial: Use Blu Age Developer on AppStream 2.0](tutorial-ba-developer.md)
+   + [Tutorial: Set up AppStream 2.0 for use with Micro Focus Enterprise Analyzer and Micro Focus Enterprise Developer](set-up-appstream.md)
+   + [Tutorial: Set up Enterprise Analyzer on AppStream 2.0](set-up-ea.md)
+   + [Tutorial: Set up Micro Focus Enterprise Developer on AppStream 2.0](set-up-ed.md)
+   + [Set up Automation for Micro Focus Enterprise Analyzer and Micro Focus Enterprise Developer Streaming Sessions](set-up-automation-m2.md)
+   + [Tutorial: Use templates with Micro Focus Enterprise Developer](tutorial-templates-ed.md)
++ [Build Tools and CI/CD Pipeline](cicd-m2.md)
+   + [Tutorial: Setting up the build for the Planets demo app](tutorial-build-ba.md)
+   + [Tutorial: Setting up the build for the BankDemo sample application](tutorial-build.md)
+   + [Tutorial: Setting up a CI/CD pipeline for use with Blu Age Developer](tutorial-cicd-ba.md)
+   + [Tutorial: Setting up a CI/CD pipeline for use with Micro Focus Enterprise Developer](tutorial-cicd-mf.md)
 + [Security in AWS Mainframe Modernization](security.md)
    + [Data protection in AWS Mainframe Modernization](data-protection.md)
-   + [Identity and access management for AWS Mainframe Modernization](security-iam.md)
+   + [Identity and Access Management for AWS Mainframe Modernization](security-iam.md)
       + [How AWS Mainframe Modernization works with IAM](security_iam_service-with-iam.md)
-      + [AWS Mainframe Modernization identity-based policy examples](security_iam_id-based-policy-examples.md)
+      + [Identity-based policy examples for AWS Mainframe Modernization](security_iam_id-based-policy-examples.md)
       + [Troubleshooting AWS Mainframe Modernization identity and access](security_iam_troubleshoot.md)
+      + [Using service-linked roles for Mainframe Modernization](using-service-linked-roles.md)
    + [Compliance validation for AWS Mainframe Modernization](compliance-validation.md)
    + [Resilience in AWS Mainframe Modernization](disaster-recovery-resiliency.md)
    + [Infrastructure security in AWS Mainframe Modernization](infrastructure-security.md)
+   + [Tutorial: Blu Age Application Security in AWS Mainframe Modernization](security-app-ba.md)
+   + [Access AWS Mainframe Modernization using an interface endpoint (AWS PrivateLink)](vpc-interface-endpoints.md)
++ [Monitoring AWS Mainframe Modernization](monitoring-overview.md)
+   + [Monitoring AWS Mainframe Modernization with Amazon CloudWatch](monitoring-cloudwatch.md)
+   + [Logging AWS Mainframe Modernization API calls using AWS CloudTrail](logging-using-cloudtrail.md)
++ [Troubleshooting](troubleshooting-m2.md)
+   + [Error: Time out while waiting for dataset name to be unlocked](ba-blusam-timeout.md)
+   + [Cannot access an application's URL](both-application-connectivity.md)
++ [Concepts](concept-m2.md)
 + [Document history for the AWS Mainframe Modernization User Guide](doc-history.md)

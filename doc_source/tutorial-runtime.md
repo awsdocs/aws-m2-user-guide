@@ -1,261 +1,131 @@
-# Managed Runtime Tutorial<a name="tutorial-runtime"></a>
+# Tutorial: Managed Runtime for Micro Focus<a name="tutorial-runtime"></a>
 
-This tutorial shows how to deploy and test the BankDemo sample application in the AWS Mainframe Modernization managed runtime with the Micro Focus runtime engine\.
+This tutorial shows how to deploy and run the BankDemo sample application in a AWS Mainframe Modernization managed runtime environment with the Micro Focus runtime engine\. The BankDemo sample application is a simplified banking application similar to what bank employees might use to check customer account balances, transfer funds, or calculate the cost of a loan\. In the tutorial, you create resources in other AWS services, including Amazon Simple Storage Service, Amazon Relational Database Service or Amazon Aurora, AWS Key Management Service, and AWS Secrets Manager\.
 
 **Topics**
-+ [Prerequisites](#tutorial-runtime-prerequisites)
-+ [Step 1: Create a runtime environment](#tutorial-runtime-step1)
-+ [Step 2: Create an application](#tutorial-runtime-step2)
-+ [Step 3: Deploy an application](#tutorial-runtime-step3)
-+ [Step 4: Import data sets](#tutorial-runtime-step4)
-+ [Step 5: Start an application](#tutorial-runtime-step5)
-+ [Step 6: Connect to the BankDemo sample application](#tutorial-runtime-step6)
++ [Prerequisites](#tutorial-runtime-mf-prerequisites)
++ [Step 1: Create a database](#tutorial-runtime-mf-db)
++ [Step 2: Create and configure an AWS Key Management Service key](#tutorial-runtime-mf-key)
++ [Step 3: Create and configure an AWS Secrets Manager secret](#tutorial-runtime-mf-secret)
++ [Step 4: Create a runtime environment](#tutorial-runtime-mf-env)
++ [Step 5: Create an application](#tutorial-runtime-mf-app)
++ [Step 6: Deploy an application](#tutorial-runtime-mf-deploy)
++ [Step 7: Import data sets](#tutorial-runtime-mf-import)
++ [Step 8: Start an application](#tutorial-runtime-mf-start)
++ [Step 9: Connect to the BankDemo sample application](#tutorial-runtime-mf-connect)
++ [Clean up resources](#tutorial-runtime-mf-clean)
++ [Next steps](#tutorial-runtime-mf-next)
 
-## Prerequisites<a name="tutorial-runtime-prerequisites"></a>
+## Prerequisites<a name="tutorial-runtime-mf-prerequisites"></a>
 
 Before you start the tutorial, make sure you complete the following prerequisites:
-+  Create an Amazon Relational Database Service PostgreSQL or Amazon Aurora PostgreSQL DB instance by following the instructions in [Creating a PostgreSQL DB instance and connecting to a database on a PostgreSQL DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.PostgreSQL.html) in the *Amazon RDS User Guide*\.
-+ Upload the [BankDemo sample application](https://d1vi4vxke6c2hu.cloudfront.net/demo/bankdemo_runtime.zip) to Amazon S3\. For more information, see the [Enterprise Build Tools Tutorial](tutorial-build.md)\.
-+ \(Optional\) Create file storage of type Amazon Elastic File System or Amazon FSx for Lustre\.
++ Upload the [BankDemo sample application](https://d1vi4vxke6c2hu.cloudfront.net/demo/bankdemo_runtime.zip) to a bucket in Amazon S3\. Make sure that the bucket is in the same Region as AWS Mainframe Modernization\. For more information, see the [Tutorial: Setting up the build for the BankDemo sample application](tutorial-build.md)\.
++ Download the [catalog files](https://d1vi4vxke6c2hu.cloudfront.net/demo/catalog.zip) that the BankDemo sample application requires to locate the application data, and then upload them to an Amazon S3 bucket, such as `s3://m2-tutorial`\.
++ Make sure that your IAM user has the `CREATEDB` permission\.
 
-### Create and configure an AWS Key Management Service key and AWS Secrets Manager secret<a name="tutorial-runtime-prereq-secret"></a>
+## Step 1: Create a database<a name="tutorial-runtime-mf-db"></a>
 
-An AWS KMS key is required in order to create a secret in Secrets Manager\. Follow these steps to securely store the credentials for the Amazon RDS database instance you created for this tutorial\. For more information, see [Prerequisites](#tutorial-runtime-prerequisites)\.
+In this step, you create a PostgreSQL database in either Amazon Relational Database Service or Amazon Aurora\. For the tutorial, this database contains the data sets that the BankDemo sample application uses for customer tasks, such as checking balances or transferring funds\.
 
-1. To create the key, follow the steps in [Creating keys](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) in the *AWS Key Management Service Developer Guide*\. You will need to edit the key policy for AWS Mainframe Modernization before you finish creating the key\.
+**To create a database in Amazon RDS**
 
-1. After you finish selecting the IAM users and roles that can use the key \(step 15\), edit the key policy to grant AWS Mainframe Modernization principal decrypt permissions by adding \(not replacing\) the following policy statements:
+1. To create the database, follow the instructions in [Creating a PostgreSQL DB instance and connecting to a database on a PostgreSQL DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.PostgreSQL.html) in the *Amazon RDS User Guide*\.
 
-   ```
-   {
-       "Effect" : "Allow",
-       "Principal" : {
-           "Service" : "m2.amazonaws.com"
-           },
-           "Action" : "kms:Decrypt",
-           "Resource" : "*"
-   }
-   ```
+1. After you create the database, configure it by making the following changes:
+   + Create a custom parameter group by following the instructions in [Creating a DB parameter group](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithDBInstanceParamGroups.html#USER_WorkingWithParamGroups.Creating)\.
+   + Associate your custom parameter group with the database by following the instructions in [Associating a DB parameter group with a DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithDBInstanceParamGroups.html#USER_WorkingWithParamGroups.Associating)\.
+   + Change the `max_prepared_transactions` parameter value to 100 by following the instructions in [Modifying parameters in a DB parameter group](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithDBInstanceParamGroups.html#USER_WorkingWithParamGroups.Modifying)\.
 
-1. To store the database credentials as a secret in Secrets Manager, follow the steps in [Create a secret](https://docs.aws.amazon.com/secretsmanager/latest/userguide/manage_create-basic-secret.html) in the *AWS Secrets Manager User Guide*\. You will specify the key you created in the previous steps for the encryption key\.
+   For more information on parameter groups, see [Working with parameter groups](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html)\.
 
-1. After you create the secret, view the details\. In **Resource permissions \- optional**, choose **Edit permissions**\. In the editor, add a resource\-based policy, such as the following, to share the secret with AWS Mainframe Modernization\.
+**To create a database in Aurora**
 
-   ```
-   {
-       "Effect" : "Allow",
-       "Principal" : {
-         "Service" : "m2.amazonaws.com"
-       },
-       "Action" : "secretsmanager:GetSecretValue",
-       "Resource" : "*"
-   }
-   ```
+1. To create the database, follow the instructions in [Creating a DB cluster and connecting to a database on an Aurora PostgreSQL DB cluster](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_GettingStartedAurora.CreatingConnecting.AuroraPostgreSQL.html) in the *Amazon Aurora User Guide*\. 
 
-1. Choose **Save**\.
+1. After you create the database, configure it by making the following changes:
+   + Create a custom DB cluster parameter group by following the instructions in [Creating a DB cluster parameter group](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_WorkingWithDBClusterParamGroups.html#USER_WorkingWithParamGroups.CreatingCluster)\.
+   + Associate your custom parameter group with the database by following the instructions in [Associating a DB cluster parameter group with a DB cluster](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_WorkingWithDBClusterParamGroups.html#USER_WorkingWithParamGroups.AssociatingCluster)\.
+   + Change the `max_prepared_transactions` parameter value to 100 by following the instructions in [Modifying parameters in a DB cluster parameter group](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_WorkingWithDBClusterParamGroups.html#USER_WorkingWithParamGroups.ModifyingCluster)\.
 
-### Upload the data sets<a name="tutorial-runtime-prereq-dataset"></a>
+   For more information on parameter groups, see [Working with parameter groups](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_WorkingWithParamGroups.html)\. For more information on DB cluster parameter groups, see [Working with DB cluster parameter groups](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_WorkingWithDBClusterParamGroups.html)\.
 
-Download the [catalog files](https://d1vi4vxke6c2hu.cloudfront.net/demo/catalog.zip) for use with the BankDemo sample application, then upload them to an Amazon S3 bucket, such as `s3://m2-tutorial`\. The following JSON shows all the required data sets\. Replace `$S3_DATASET_PREFIX` with your Amazon S3 bucket that contains the catalog data\. For example, `m2-tutorial/catalog`\.
+## Step 2: Create and configure an AWS Key Management Service key<a name="tutorial-runtime-mf-key"></a>
+
+To store the credentials securely for the Amazon RDS or Aurora database instance that you created for this tutorial, you need to create a secret in AWS Secrets Manager\. To create a secret in Secrets Manager, you need to create an AWS Key Management Service key\.
+
+To create a AWS KMS key, follow the steps in [Creating keys](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) in the *AWS Key Management Service Developer Guide*\.
+
+To grant AWS Mainframe Modernization decrypt permissions, you must update the key policy\. Add policy statements as shown here:
 
 ```
 {
-    "dataSets": [
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/CATALOG.DAT", 
-                "name": "CATALOG"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/CATALOG.DAT"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/SPLDSN.dat", 
-                "name": "SPLDSN"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/SPLDSN.dat"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/SPLJNO.dat?type=seq\\;reclen=80,80", 
-                "name": "SPLJNO"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/SPLJNO.dat"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/SPLJOB.dat", 
-                "name": "SPLJOB"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/SPLJOB.dat"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/SPLMSG.dat", 
-                "name": "SPLMSG"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/SPLMSG.dat"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/SPLOUT.dat", 
-                "name": "SPLOUT"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/SPLOUT.dat"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/SPLSUB.dat", 
-                "name": "SPLSUB"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/SPLSUB.dat"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKACC.DAT?folder=/DATA", 
-                "name": "MFI01V.MFIDEMO.BNKACC"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKACC.DAT"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKATYPE.DAT?folder=/DATA", 
-                "name": "MFI01V.MFIDEMO.BNKATYPE"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKATYPE.DAT"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKCUST.DAT?folder=/DATA", 
-                "name": "MFI01V.MFIDEMO.BNKCUST"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKCUST.DAT"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKHELP.DAT?folder=/DATA", 
-                "name": "MFI01V.MFIDEMO.BNKHELP"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKHELP.DAT"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKTXN.DAT?folder=/DATA", 
-                "name": "MFI01V.MFIDEMO.BNKTXN"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKTXN.DAT"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/YBATTSO.PRC?folder=/PRC\\;type=lseq\\;reclen=80,80", 
-                "name": "YBATTSO.PRC"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/prc/YBATTSO.prc"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/YBNKEXTV.PRC?folder=/PRC\\;type=lseq\\;reclen=80,80", 
-                "name": "YBNKEXTV.PRC"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/prc/YBNKEXTV.prc"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/YBNKPRT1.PRC?folder=/PRC\\;type=lseq\\;reclen=80,80", 
-                "name": "YBNKPRT1.PRC"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/prc/YBNKPRT1.prc"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/YBNKSRT1.PRC?folder=/PRC\\;type=lseq\\;reclen=80,80", 
-                "name": "YBNKSRT1.PRC"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/prc/YBNKSRT1.prc"
-            }
-        }, 
-        {
-            "dataSet": {
-                "location": "sql://ESPACDatabase/VSAM/KBNKSRT1.TXT?folder=/CTLCARDS\\;type=lseq\\;reclen=80,80", 
-                "name": "KBNKSRT1"
-            }, 
-            "externalLocation": {
-                "s3Location": "$S3_DATASET_PREFIX/ctlcards/KBNKSRT1.txt"
-            }
-        }
-    ]
+    "Effect" : "Allow",
+    "Principal" : {
+        "Service" : "m2.amazonaws.com"
+        },
+        "Action" : "kms:Decrypt",
+        "Resource" : "*"
 }
 ```
 
-## Step 1: Create a runtime environment<a name="tutorial-runtime-step1"></a>
+## Step 3: Create and configure an AWS Secrets Manager secret<a name="tutorial-runtime-mf-secret"></a>
 
-1. Open the [AWS Mainframe Modernization console](https://us-west-2.console.aws.amazon.com/m2/home?region=us-west-2#/) and choose **Get started**\.  
-![\[Get started creating an environment.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/env-get-started.png)
+To create a secret in Secrets Manager for storing the credentials for the database you created previously, follow the steps in [Create a secret](https://docs.aws.amazon.com/secretsmanager/latest/userguide/manage_create-basic-secret.html) in the *AWS Secrets Manager User Guide*\.\. Specify the key you created in the previous steps for the encryption key\.
 
-1. On the **Get started** page, under **What would you like to do?**, choose **Deploy \- Create runtime environment**, and then choose **Continue**\.  
-![\[Create a runtime environment.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/env-deploy.png)
+During the key creation process, choose **Resource permissions \- optional**, then choose **Edit permissions**\. In the editor, add a resource\-based policy, such as the following, to retrieve the content of the encrypted fields\.
 
-1. On the **Create environment** page, under **Permissions \(one time setup\)**, choose **I grant AWS Mainframe Modernization the required permissions\.** These permissions allow AWS Mainframe Modernization to create AWS resources on your behalf\. This is a one time setup step, which will grant AWS Mainframe Modernization the necessary permissions\. If permissions were previously granted, choose **Continue**\.  
-![\[Grant or confirm permissions.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/env-perm.png)
+```
+{
+    "Effect" : "Allow",
+    "Principal" : {
+      "Service" : "m2.amazonaws.com"
+    },
+    "Action" : "secretsmanager:GetSecretValue",
+    "Resource" : "*"
+}
+```
 
-1. Specify a name and optional description for the runtime environment, and choose **Next**\.  
-![\[Specify basic information.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/env-step1.png)
+Choose **Save**\.
 
-1. Under **Availability**, choose **High availability cluster**\. Under **Resources**, choose an instance type and the number of instances you want\. Then choose **Next**\.  
-![\[Specify configurations.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/env-config.png)
+## Step 4: Create a runtime environment<a name="tutorial-runtime-mf-env"></a>
 
-1. On the **Attach storage** page, optionally specify either Amazon EFS or Amazon FSx file systems\. Then choose **Next**\.  
-![\[Attach storage (optional).\]](http://docs.aws.amazon.com/m2/latest/userguide/images/env-storage.png)
+1. Open the [AWS Mainframe Modernization console](https://us-west-2.console.aws.amazon.com/m2/home?region=us-west-2#/)\.  
+![\[Modernize mainframe applications with replatform with the replatform pattern selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/m2-mf-get-started.png)
 
-1. On the **Review and create** page, review all the configurations you selected for the runtime environment and choose **Create Environment**\.  
-![\[Review configurations.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/env-review.png)
+1. In **Modernize mainframe applications**, choose **Replatform with Micro Focus**, and then choose **Get started**\.
 
-1. Wait until environment creation succeeds and the status changes to **Available**\. It might take up to two minutes\.  
-![\[Environment created successfully.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/env-confirm.png)
+1. On the **Get started** page, under **How would you like to start with AWS Mainframe Modernization?**, choose **Deploy**\. Then, in the **Deploy** section, choose **Create runtime environment**\.
 
-## Step 2: Create an application<a name="tutorial-runtime-step2"></a>
+1. Choose **Continue**\.  
+![\[How would you like to start AWS Mainframe Modernization with deploy and create runtime environment selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/m2-mf-create-env.png)
+
+1. Specify a name, for example, **Tutorial**, for the runtime environment\. Choose **Next**\.  
+![\[The runtime environment name and description section .\]](http://docs.aws.amazon.com/m2/latest/userguide/images/m2-mf-create-env-basic.png)
+
+1. Under **Availability**, choose **High availability cluster**\. Under **Resources**, choose either M2\.c5\.large or M2\.m5\.large for the instance type, and the number of instances \(up to two\) that you want\. Make sure you choose at least two subnets, and choose **Allow applications deployed to this environment to be publicly accessible**\. Then choose **Next**\.  
+![\[The specify configurations page with high availability selected. The M2.m5.large instance type is also selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/env-config.png)
+
+1. On the **Attach storage** page, choose **Next**\.
+
+1. On the **Review and create** page, review all the configurations that you provided for the runtime environment, and then choose **Create Environment**\.  
+![\[The review and create page showing the previous selections.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/env-review.png)
+
+When a banner appears that says `Environment name was created successfully`, then the **Status** field changes to **Available**\. The environment creation process can take up to two minutes\.
+
+![\[The environment created successfully message.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/env-confirm.png)
+
+## Step 5: Create an application<a name="tutorial-runtime-mf-app"></a>
 
 1. In the navigation pane, choose **Applications**\. Then choose **Create application**\.  
-![\[Create application.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/app-create.png)
+![\[The applications page with the Create application shown.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/app-create.png)
 
-1. On the **Specify basic information** page, specify the application name and an optional description\. You can also provide optional tagging information\. Then choose **Next**\.  
-![\[Specify basic information.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/app-step1.png)
+1. In **Specify basic information**, enter a name and description for the application, and make sure **Micro Focus** is selected\. Then choose **Next**\.  
+![\[The create applications page with the Micro Focus engine type selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/m2-mf-create-app.png)
 
-1. On the **Specify resources and configurations** page, choose whether you want to specify the application definition using the inline editor or provide an Amazon S3 bucket where the application definition file is stored\. Either type the application definition or provide the Amazon S3 location\. Then choose **Next**\.  
-![\[Specify resources and configurations.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/app-config.png)
+1. On the **Specify resources and configurations** page, choose how you want to specify the application definition\. You can use the inline editor or else specify an application definition JSON file in an Amazon S3 bucket\. Paste or type the application definition or provide the Amazon S3 location\. Then choose **Next**\.  
+![\[The specify resources and configurations page with a JSON file displayed in the online editor.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/app-config.png)
 
-   You can use the following sample application definition file\. Make sure to replace `$SECRET_ARN`, `$S3_BUCKET`, and `$S3_PREFIX` with the correct values for you\.
+   You can use the following sample application definition file\. Make sure to replace `$SECRET_ARN`, `$S3_BUCKET`, and `$S3_PREFIX` with your correct values\.
 
    ```
    {
@@ -331,60 +201,150 @@ Download the [catalog files](https://d1vi4vxke6c2hu.cloudfront.net/demo/catalog.
 **Note**  
 This file is subject to change\.
 
-1. On the **Review and create** page, review the information you provided and choose **Create application**\.  
-![\[Review and create.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/app-review.png)
+   For more information on the application definition, see [Micro Focus application definition](applications-m2-definition.md#applications-m2-definition-mf)\.
 
-1. Wait until the application creation operation succeeds and the status changes to **Available**\.  
-![\[Application created successfully.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/app-confirm.png)
+1. On the **Review and create** page, review the information that you provided, and choose **Create application**\.  
+![\[The Review and create page showing the previous selections.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/app-review.png)
 
-## Step 3: Deploy an application<a name="tutorial-runtime-step3"></a>
+When a banner appears that says `Application name was created successfully`, then the **Status** field changes to **Available**\.
 
-1. In the navigation pane, choose **Applications**, then choose **BankDemo**\. Choose **Actions**, then choose **Deploy application**\.  
-![\[Deploy the application.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/deploy-action.png)
+![\[The Application created successfully message.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/app-confirm.png)
 
-1. Choose the **Tutorial** environment and then choose **Deploy**\.  
-![\[Choose the target environment.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/deploy-env.png)
+## Step 6: Deploy an application<a name="tutorial-runtime-mf-deploy"></a>
 
-1. Wait until the BankDemo application deployment succeeds and the status changes to **Ready**\.  
-![\[Deployment succeeded.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/deploy-confirm.png)
+1. In the navigation pane, choose **Applications**, and then choose **BankDemo**\. Choose **Actions**, and then choose **Deploy application**\.  
+![\[The BankDemo application details page with Deploy application selected on the Actions menu.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/deploy-action.png)
 
-## Step 4: Import data sets<a name="tutorial-runtime-step4"></a>
+1. Choose the environment that you created previously, for example, **Tutorial**, and then choose **Deploy**\.  
+![\[The Deploy Application page with the Tutorial environment selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/deploy-env.png)
 
-1. In the navigation pane, choose **Applications**, then choose **BankDemo**\. Choose the **Data sets** tab\. Then choose **Import**\.  
-![\[Select the data set tab.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/import-start.png)
+When the BankDemo application deploys successfully, the status changes to **Ready**\.
 
-1. Choose **Add new item** to add each data set and choose **Submit** after you provide the information for each data set\.   
-![\[Choose the data sets to import.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/import-submit.png)
+![\[The applications page showing the Ready status.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/deploy-confirm.png)
 
-   The following table lists the data sets that you need to import\. Replace `$S3_DATASET_PREFIX` with your Amazon S3 bucket that contains the catalog data\. For example, `S3_DATASET_PREFIX=s3://m2-tutorial/catalog`\.    
+## Step 7: Import data sets<a name="tutorial-runtime-mf-import"></a>
+
+1. In the navigation pane, choose **Applications**, and then choose **BankDemo**\. Choose the **Data sets** tab\. Then choose how you want to specify the data sets\. You can use a data set configuration JSON file in an Amazon S3 bucket, or specify the data set configuration values separately\.
+
+1. Choose **Add new item** and add each data set and choose **Submit** after you provide the information for each data set\. 
+
+   The following table lists the data sets that you must import\. Replace `$S3_DATASET_PREFIX` with your Amazon S3 bucket that contains the catalog data, for example, `S3_DATASET_PREFIX=s3://m2-tutorial/catalog`\.    
 [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/m2/latest/userguide/tutorial-runtime.html)
 
-1. Wait until the data set import process completes and the status changes to **Completed**\.  
-![\[Import succeeded.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/import-confirm.png)
+   Alternatively, you can specify the data set configuration in a JSON file, such as the following\. This file shows all the required data sets\. Replace `$S3_DATASET_PREFIX` with your Amazon S3 bucket that contains the catalog data, for example, `m2-tutorial/catalog`\.
 
-## Step 5: Start an application<a name="tutorial-runtime-step5"></a>
+   ```
+   {
+       "dataSets": [{
+               "dataSet": {
+                   "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKACC.DAT?folder=/DATA",
+                   "name": "MFI01V.MFIDEMO.BNKACC"
+               },
+               "externalLocation": {
+                   "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKACC.DAT"
+               }
+           },
+           {
+               "dataSet": {
+                   "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKATYPE.DAT?folder=/DATA",
+                   "name": "MFI01V.MFIDEMO.BNKATYPE"
+               },
+               "externalLocation": {
+                   "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKATYPE.DAT"
+               }
+           },
+           {
+               "dataSet": {
+                   "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKCUST.DAT?folder=/DATA",
+                   "name": "MFI01V.MFIDEMO.BNKCUST"
+               },
+               "externalLocation": {
+                   "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKCUST.DAT"
+               }
+           },
+           {
+               "dataSet": {
+                   "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKHELP.DAT?folder=/DATA",
+                   "name": "MFI01V.MFIDEMO.BNKHELP"
+               },
+               "externalLocation": {
+                   "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKHELP.DAT"
+               }
+           },
+           {
+               "dataSet": {
+                   "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKTXN.DAT?folder=/DATA",
+                   "name": "MFI01V.MFIDEMO.BNKTXN"
+               },
+               "externalLocation": {
+                   "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKTXN.DAT"
+               }
+           }
+       ]
+   }
+   ```
 
-1. In the navigation pane, choose **Applications**, then choose **BankDemo**\. Choose **Actions**, then choose **Start application**\.  
-![\[Start the application.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/start-action.png)
+When AWS Mainframe Modernization finishes importing the data sets, the **Status** field changes to **Completed**\. Wait until the number of failed records is zero\.
 
-1. Wait until the BankDemo application starts successfully and the status changes to **Running**\.  
-![\[Application start succeeded.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/start-confirm.png)
+![\[The BankDemo application page with the Data sets tab selected and the completed status displayed.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/import-confirm.png)
 
-## Step 6: Connect to the BankDemo sample application<a name="tutorial-runtime-step6"></a>
+## Step 8: Start an application<a name="tutorial-runtime-mf-start"></a>
++ In the navigation pane, choose **Applications**, and then choose **BankDemo**\. Choose **Actions**, and then choose **Start application**\.  
+![\[The BankDemo application page with the Definition tab selected and Start application selected on the Actions menu.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/start-action.png)
+
+When the BankDemo application starts to run successfully, the **Status** field changes to **Running**\.
+
+![\[The Application start succeeded message.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/start-confirm.png)
+
+## Step 9: Connect to the BankDemo sample application<a name="tutorial-runtime-mf-connect"></a>
+
+Before you connect, make sure that the VPC and security group that you specified for the application are the same as the ones that you applied to your network interface\.
+
+To configure the TN3270 connection, you also need the DNS hostname of the network interface\. To locate the DNS hostname for configuration, complete the following steps:
+
+1. Open the AWS Mainframe Modernization console and choose **Applications**\.
+
+1. In the list of applications, choose the application you want to display the details page\.
+
+1. Note the string of characters under **DNS Hostname**\.  
+![\[The BankDemo application page with the Definition tab selected and the ARN and DNS Hostname fields shown.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/m2-dns-hostname.png)
+
+**Note**  
+To ensure that the Network Load Balancer doesn’t silently drop your connection, configure the keepalive setting on your TN3270 terminal to at least 180 seconds\.
+
+Continue to connect to the BankDemo sample application, as follows:
 
 1. Start the terminal emulator you want\. This tutorial uses Micro Focus Rumba\+\.  
-![\[Start the terminal emulator.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-start.png)
+![\[The terminal emulator welcome screen.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-start.png)
 
 1. Choose **Connection**, then **Configure**, then **TN3270**\.  
-![\[Configure the terminal emulator step 1.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-config-1.png)  
-![\[Configure the terminal emulator step 2.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-config-2.png)
+![\[The Connection menu with the Configure option selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-config-1.png)
+
+   To add the DNS hostname address you noted earlier, choose **Insert**, and specify `6000` for the **Telnet Port**\.  
+![\[The Session Configuration page with the DNS hostname added.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-config-2.png)
 
 1. Enter the BANK transaction name\.  
-![\[Specify the name of the application.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-name.png)
+![\[The terminal emulator screen with the BANK transaction name entered.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-name.png)
 
 1. Type `B0001` for the username and `A` for the password\.  
-![\[Login to the application.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-login.png)
+![\[The sample application login screen with B0001 entered for the username.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-login.png)
 
 1. After you log in successfully, you can navigate through the BankDemo application\.  
-![\[Navigate through the application part 1.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-nav-1.png)  
-![\[Navigate through the application part 2.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-nav-2.png)
+![\[The BankDemo application main screen.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-nav-1.png)  
+![\[The BankDemo application account balance screen.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/connect-nav-2.png)
+
+## Clean up resources<a name="tutorial-runtime-mf-clean"></a>
+
+If you no longer need the resources that you created for this tutorial, delete them to avoid additional charges\. To do so, complete the following steps:
++ If necessary, stop the BankDemo application\.
++ Delete the application\. For more information, see [Delete a AWS Mainframe Modernization application](applications-m2-delete.md)\.
++ Delete the runtime environment\. For more information, see [Delete a AWS Mainframe Modernization runtime environmentDelete a runtime environment](delete-environments-m2.md)\.
++ Delete the Amazon S3 buckets you created for this tutorial\. For more information, see [Deleting a bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/delete-bucket.html) in the *Amazon S3 User Guide*\.
++ Delete the AWS KMS key and Secrets Manager secret you created for this tutorial\. For more information, see [Deleting AWS KMS keys](https://docs.aws.amazon.com/kms/latest/developerguide/deleting-keys.html) and [Delete a secret](https://docs.aws.amazon.com/secretsmanager/latest/userguide/manage_delete-secret.html)\.
++ Delete the database you created for this tutorial\. For more information, see [Deleting a DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.PostgreSQL.html#CHAP_GettingStarted.Deleting.PostgreSQL)\.
+
+## Next steps<a name="tutorial-runtime-mf-next"></a>
+
+As next steps, you can see the following resources:
++ To learn how to set up a build for your modernized applications, see [Tutorial: Setting up the build for the BankDemo sample application](tutorial-build.md)
++ To learn how to set up a CI/CD pipeline for your modernized applications, see [Tutorial: Setting up a CI/CD pipeline for use with Micro Focus Enterprise Developer](tutorial-cicd-mf.md)
