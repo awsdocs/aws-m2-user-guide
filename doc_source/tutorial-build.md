@@ -24,6 +24,7 @@ Before you start your mainframe modernization project, we recommend that you lea
 
 Before you start this tutorial, complete the following prerequisites\.
 + Download the [BankDemo sample application](https://d3lkpej5ajcpac.cloudfront.net/demo/mf/BANKDEMO-build.zip)\.
++ In the left menu, click on **Tools**.Locate MicroFocus Analysis, development, and build assets and click on **Share Assets with my AWS Account**
 
 ## Step 1: Create Amazon S3 buckets<a name="tutorial-build-step1"></a>
 
