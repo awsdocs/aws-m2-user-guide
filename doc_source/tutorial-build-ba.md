@@ -113,7 +113,7 @@ You can start a build using AWS console or AWS CLI and check for errors\. For ex
 aws codebuild start-build --project-name {name-of-the-codebuild-project}
 ```
 
-## CodeBuild details<a name="tutorial-build-ba-acb-details"></a>
+## Overview of CodeBuild process<a name="tutorial-build-ba-acb-details"></a>
 
 The CodeBuild step needs a Maven repository endpoint to execute a Maven build\. To obtain this endpoint, use `aws codeartifact get-repository-endpoint` in the `pre_build` step\.
 
