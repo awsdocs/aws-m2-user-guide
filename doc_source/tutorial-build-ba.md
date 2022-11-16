@@ -113,29 +113,35 @@ You can start a build using AWS console or AWS CLI and check for errors\. For ex
 aws codebuild start-build --project-name {name-of-the-codebuild-project}
 ```
 
-## CodeBuild details<a name="tutorial-build-ba-acb-details"></a>
+### CodeBuild details<a name="tutorial-build-ba-acb-details"></a>
 
-The CodeBuild step needs a Maven repository endpoint to execute a Maven build\. To obtain this endpoint, use `aws codeartifact get-repository-endpoint` in the `pre_build` step\.
+* On the AWS CodeBuild Console, click on Build History to view the progress of your build.
+
+* Click on the Build Run and navigate to the Build Details tab
+
+* Scroll down to review the Buildspec file
+
+The CodeBuild step needs a Maven repository endpoint to execute a Maven build\. To obtain this endpoint, use `aws codeartifact get-repository-endpoint` in the `pre_build` section of the BuildSpec file\.
 
 ```
 aws codeartifact get-repository-endpoint --domain ${CODEARTIFACT_DOMAIN} \
     --repository ${CODEARTIFACT_REPO} --format maven --output text
 ```
 
-To let Maven know we use a specific Maven repo, we create an additional file `settings.xml` and put that Maven repo endpoint into this file\. The endpoint is stored in the `$MAVEN_REPO_URL` variable and will be substituted on writing the file by the `pre_build` script\. We provide this settings file to `mvn` by using the `-s` option in the `build` script:
-
-```
-mvn -s settings.xml package
-```
-
-Another important value is the repository password which is represented by a token\. We do not store the password as plain text in the file for security reasons\. Instead, we use an environment variable `$CODEARTIFACT_TOKEN` which is also set by the `pre_build` script\. The password is obtained by calling `aws codeartifact get-authorization-token`\.
+Another important value is the repository password which is represented by a token\. We do not store the password as plain text in the file for security reasons\. Instead, we use an environment variable `$CODEARTIFACT_TOKEN` which is also set by the `pre_build` section of the BuildSpec file\. The password is obtained by calling `aws codeartifact get-authorization-token`\.
 
 ```
 aws codeartifact get-authorization-token --domain ${CODEARTIFACT_DOMAIN} \
     --query authorizationToken --output text
 ```
 
-The generated XML file will look like shown below:
+To let Maven know we use a specific Maven repo, we create an additional file `settings.xml` and put that Maven repo endpoint into this file\. The endpoint is stored in the `$MAVEN_REPO_URL` variable and will be substituted on writing the file by the `pre_build` script\. We provide this settings file to `mvn` by using the `-s` option in the `build` section of the Buildspec file:
+
+```
+mvn -s settings.xml package
+```
+
+The generated settings XML file will look like shown below:
 
 ```
    <settings>
