@@ -113,7 +113,7 @@ You can start a build using AWS console or AWS CLI and check for errors\. For ex
 aws codebuild start-build --project-name {name-of-the-codebuild-project}
 ```
 
-### CodeBuild details<a name="tutorial-build-ba-acb-details"></a>
+## Overview of CodeBuild process<a name="tutorial-build-ba-acb-details"></a>
 
 * On the AWS CodeBuild Console, click on Build History to view the progress of your build.
 
