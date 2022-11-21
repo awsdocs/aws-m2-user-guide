@@ -11,6 +11,7 @@ This tutorial demonstrates how to deploy a Blu Age\-modernized application into 
 + [Step 5: Deploy an application](#tutorial-runtime-ba-step5)
 + [Step 6: Start an application](#tutorial-runtime-ba-step6)
 + [Step 7: Access the application](#tutorial-runtime-ba-step7)
++ [Step 8: Test the application](#tutorial-runtime-ba-test)
 + [Clean up resources](#tutorial-runtime-ba-clean)
 + [Next steps](#tutorial-runtime-ba-next)
 
@@ -21,9 +22,12 @@ This tutorial requires the following prerequisites:
 
 ## Step 1: Upload the demo application<a name="tutorial-runtime-ba-step1"></a>
 
-Upload the demo application to an Amazon S3 bucket\. Make sure that this bucket is in the same region where you will deploy the application\. The following example shows a bucket named **planetsdemo**, with a key prefix \(folder\) named **v1** and an archive named `planetsdemo-v1.zip`:
+Upload the demo application to an Amazon S3 bucket\. Make sure that this bucket is in the same AWS Region where you will deploy the application\. The following example shows a bucket named **planetsdemo**, with a key prefix \(folder\) named **v1** and an archive named `planetsdemo-v1.zip`:
 
 ![\[The planetsdemo bucket in Amazon S3 showing the v1 prefix and the planetsdemo-v1.zip file.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/s3-ba-bucket.png)
+
+**Note**  
+The folder in the bucket is required\.
 
 ## Step 2: Create the application definition<a name="tutorial-runtime-ba-step2"></a>
 
@@ -31,37 +35,28 @@ Deploying an application to the managed runtime requires a AWS Mainframe Moderni
 
 ```
 {
-  "resources": [
-    {
-      "resource-type": "listener",
-      "resource-id": "tomcat",
-      "properties": {
-        "port": 8196,
-        "type": "http"
-      }
-    },
-    {
-      "resource-type": "ba-application",
-      "resource-id": "planetsdemo",
-      "properties": {
-        "app-location": "${s3-source}/PlanetsDemo-v1.zip"
-      }
+    "template-version": "2.0",
+    "source-locations": [{
+        "source-id": "s3-source",
+        "source-type": "s3",
+        "properties": {
+            "s3-bucket": "planetsdemo",
+            "s3-key-prefix": "v1"
+        }
+    }],
+    "definition": {
+        "listeners": [{
+            "port": 8196,
+            "type": "http"
+        }],
+        "ba-application": {
+            "app-location": "${s3-source}/PlanetsDemo-v1.zip"
+        }
     }
-  ],
-  "source-locations": [
-    {
-      "source-id": "s3-source",
-      "source-type": "s3",
-      "properties": {
-        "s3-bucket": "planetsdemo",
-        "s3-key-prefix": "v1"
-      }
-    }
-  ]
 }
 ```
 
-Change the `ba-application` and `s3-source` entries as needed to point to the Amazon S3 bucket where you previously uploaded the sample application\.
+Change the `s3-bucket` entry to the name of the Amazon S3 bucket where you stored the sample application zip file\.
 
 For more information on the application definition, see [Blu Age application definition sample](applications-m2-definition.md#applications-m2-definition-ba)\.
 
@@ -69,7 +64,9 @@ For more information on the application definition, see [Blu Age application def
 
 Create the AWS Mainframe Modernization runtime environment by following these steps:
 
-1. Navigate to **AWS Mainframe Modernization** in the AWS Management Console\.
+1. Open the AWS Mainframe Modernization console at [https://console\.aws\.amazon\.com/m2/](https://console.aws.amazon.com/m2/)\.
+
+1. In the region selector, choose the AWS Region where you want to create the environment\. This AWS Region must match the Region where you created the Amazon S3 bucket in [Step 1: Upload the demo application](#tutorial-runtime-ba-step1)\. 
 
 1. In **Modernize mainframe applications**, choose **Refactor with Blu Age** then choose **Get started**\.  
 ![\[The AWS Mainframe Modernization get started page showing Refactor with Blu Age.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/m2-ba-get-started.png)
@@ -83,7 +80,11 @@ Create the AWS Mainframe Modernization runtime environment by following these st
 1. In **Specify configurations**, choose **Standalone runtime environment**:  
 ![\[The AWS Mainframe Modernization Availability section with standalone runtime environment selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/m2-ba-config-avail.png)
 
-1. In **Security and network**, choose **Allow applications deployed to this environment to be publicly accessible**, and choose a VPC \(you can use the **Default** one\) and two subnets:  
+1. In **Security and network**, make the following changes:
+   + Choose **Allow applications deployed to this environment to be publicly accessible**\.
+   + Choose a VPC \(you can use the **Default** one\)\.
+   + Choose two subnets\.
+   + Choose a security group \(you can use the **Default** one\.  
 ![\[The AWS Mainframe Modernization Security and Network section with the default VPC and two subnets selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/m2-ba-security-network.png)
 
    If you want to access the application from outside the VPC you chose, make sure that the inbound rules for that VPC are configured properly\. For more information, see [Cannot access an application's URL](both-application-connectivity.md)\.
@@ -139,9 +140,26 @@ After you successfully create both the AWS Mainframe Modernization runtime envir
 
 1. In a browser, navigate to `http://{hostname}:{portname}/PlanetsDemo-web-1.0.0/`, where:
    + `hostname` is the DNS name copied above\.
-   + `portname` is the tomcat port defined in the application definition earlier\.
+   + `portname` is the tomcat port defined in the application definition you created in [Step 2: Create the application definition](#tutorial-runtime-ba-step2)\.
+
+   The JICS screen is displayed\.  
+![\[The JICS transaction launcher page.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-jics-launcher.png)
 
 If you cannot access the application, see [Cannot access an application's URL](both-application-connectivity.md)\.
+
+## Step 8: Test the application<a name="tutorial-runtime-ba-test"></a>
+
+In this step, you run a transaction in the migrated application\.
+
+1. On the JICS screen, enter `PINQ` in the input field and choose **Run** \(or press Enter\) to start the application transaction\.
+
+   The demo app screen should then be displayed:  
+![\[The PlanetsDemo application screen in insert mode.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-demo-app-screen.png)
+
+1. Type a planet name in the corresponding field and press Enter:  
+![\[The PlanetsDemo application screen with Earth entered in the Planet name field.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-demo-with-data.png)
+
+   You should see details about the planet\.
 
 ## Clean up resources<a name="tutorial-runtime-ba-clean"></a>
 

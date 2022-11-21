@@ -1,4 +1,4 @@
-# Tutorial: Setting up the build for the BankDemo sample application<a name="tutorial-build"></a>
+# Tutorial: Setting up the Micro Focus build for the BankDemo sample application<a name="tutorial-build"></a>
 
 This tutorial demonstrates how to use AWS CodeBuild to compile the BankDemo sample application source code from Amazon S3 and then export the compiled code back to Amazon S3\.
 
@@ -23,12 +23,14 @@ Before you start your mainframe modernization project, we recommend that you lea
 ## Prerequisites<a name="tutorial-build-prerequisites"></a>
 
 Before you start this tutorial, complete the following prerequisites\.
-+ Download the [BankDemo sample application](https://d3lkpej5ajcpac.cloudfront.net/demo/mf/BANKDEMO-build.zip)\.
-+ In the left menu, click on **Tools**.Locate MicroFocus Analysis, development, and build assets and click on **Share Assets with my AWS Account**
++ Download the [BankDemo sample application](https://d3lkpej5ajcpac.cloudfront.net/demo/mf/BANKDEMO-build.zip) and unzip it to a folder\.
+  + The source folder contains COBOL programs and Copybooks, as well as CICS BMS definitions\. It also contains a JCL folder for reference, although you do not need to build JCL\.
+  + You might also notice the meta files required for the build\.
++ In the AWS Mainframe Modernization console, choose **Tools**\. In **Analysis, development, and build assets**, choose **Share assets with my AWS account**\.
 
 ## Step 1: Create Amazon S3 buckets<a name="tutorial-build-step1"></a>
 
-In this step, you create two Amazon S3 buckets to hold the source code \(the input bucket\) and the build output \(the output bucket\)\. Follow the instructions in [Creating, configuring, and working with Amazon S3 buckets](https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-buckets-s3.html) in the *Amazon S3 User Guide*\.
+In this step, you create two Amazon S3 buckets to hold the source code \(the input bucket\) and the build output \(the output bucket\)\. For more information, see [Creating, configuring, and working with Amazon S3 buckets](https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-buckets-s3.html) in the *Amazon S3 User Guide*\.
 
 1. Log in to the Amazon S3 console and choose **Create bucket**\.
 
@@ -40,13 +42,15 @@ If you are creating the bucket in a different AWS Region from US East \(N\. Virg
 
 1. Repeat steps 1\-3 to create the output bucket\. An example name is `codebuild-regionId-accountId-output-bucket`, where `regionId` is the AWS Region of the bucket and `accountId` is your AWS account ID\.
 
+   Whatever names you choose for these buckets, be sure to use them throughout this tutorial\. 
+
 ## Step 2: Create the build spec file<a name="tutorial-build-step2"></a>
 
 In this step, you create a build spec file, which provides build commands and related settings, in YAML format, to CodeBuild for running the build\. For more information, see [Build specification reference for CodeBuild](https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html) in the *AWS CodeBuild User Guide*\.
 
-1. Create a file named `buildspec.yml` at the local root directory of your source code folder\.
+1. Create a file named `buildspec.yml` in the directory you unzipped as the prerequisite\.
 
-1. Add the following content to the end of the file:
+1. Add the following content to the file and save\. No changes are required for this file\.
 
    ```
    version: 0.2
@@ -75,7 +79,20 @@ In this step, you create a build spec file, which provides build commands and re
        - $CODEBUILD_SRC_DIR/target/**
    ```
 
-   where `CODEBUILD_BUILD_ID`, `CODEBUILD_BUILD_ARN`, `$CODEBUILD_SRC_DIR/source`, and `$CODEBUILD_SRC_DIR/target` are environment variables you can pass to CodeBuild\. For more information, see [Environment variables in build environments](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html)\.
+   where `CODEBUILD_BUILD_ID`, `CODEBUILD_BUILD_ARN`, `$CODEBUILD_SRC_DIR/source`, and `$CODEBUILD_SRC_DIR/target` are environment variables available within CodeBuild\. For more information, see [Environment variables in build environments](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html)\.
+
+   At this point, your directory should look like this\.
+
+   ```
+   (root directory name)
+       |-- build.xml
+       |-- buildspec.yml
+       |-- LICENSE.txt
+       |-- source
+            |... etc.
+   ```
+
+1. Zip the contents of the folder to a file named BankDemo\.zip\. For this tutorial you cannot zip the folder\. Instead, you must zip the contents of the folder to the BankDemo\.zip\.
 
 ## Step 3: Upload the source files<a name="tutorial-build-step3"></a>
 
@@ -85,9 +102,9 @@ In this step, you upload the BankDemo sample application source code to the inpu
 
 1. In **Objects**, choose **Upload**\.
 
-1. In **Files and folders**, choose **Add Folder**\.
+1. In **Files and folders**, choose **Add Files**\.
 
-1. Navigate to the location where you downloaded the BankDemo sample and choose the BankDemo folder\.
+1. Navigate to and choose the BankDemo\.zip you created\.
 
 1. Choose **Upload**\.
 
@@ -260,7 +277,7 @@ In this step, you create the CodeBuild project\.
 
 1. In **Source**, for **Source provider**, choose **Amazon S3** then choose the input bucket you created previously; for example, `codebuild-regionId-accountId-input-bucket`\.
 
-1. In **S3 object key or S3 folder**, enter the name of the folder in the Amazon S3 bucket where you uploaded the source code; for example, `bankdemo`\.
+1. In **S3 object key or S3 folder**, enter the name of the zip file that you uploaded to the Amazon S3 bucket: `bankdemo.zip`\.
 
 1. In **Environment**, choose **Custom image**\.
 
@@ -300,13 +317,15 @@ When the current phase is COMPLETED, it means that your build finished successfu
 
 ## Step 9: Download output artifacts<a name="tutorial-build-step9"></a>
 
-In this step, you download the output artifacts from Amazon S3\.
+In this step, you download the output artifacts from Amazon S3\. The Micro Focus build tool can create several different executable types\. In this tutorial it generates shared objects\.
 
 1. Log in to the Amazon S3 console\.
 
 1. In **Buckets**, choose the name of the output bucket you created previously; for example, `codebuild-regionId-accountId-output-bucket`\.
 
-1. Choose `Download`\.
+1. Choose **Download**\.
+
+1. Unzip the downloaded file, and navigate to the target folder to see the build artifacts, including the `.so` Linux shared objects\.
 
 ## Clean up resources<a name="tutorial-build-clean"></a>
 

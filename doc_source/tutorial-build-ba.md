@@ -9,7 +9,7 @@ This guide explains how to build the Planets demo app using AWS CodeBuild\.
 + [Step 2: Generate the Maven config](#tutorial-build-ba-step2)
 + [Step 3: Deploy Blu Age dependencies into the CodeArtifact repository](#tutorial-build-ba-step3)
 + [Step 4: Deploy the CodeBuild project](#tutorial-build-ba-step4)
-+ [CodeBuild details](#tutorial-build-ba-acb-details)
++ [Overview of CodeBuild process](#tutorial-build-ba-acb-details)
 + [Clean up resources](#tutorial-build-ba-clean)
 
 ## Prerequisites<a name="tutorial-build-ba-prerequisites"></a>
@@ -34,6 +34,8 @@ You can skip the Maven and the CodeArtifact steps if you already have a CodeArti
 1. Deploy the CodeBuild project\.
 
 ## Step 1: Push the source code to the repo<a name="tutorial-build-ba-step1"></a>
+
+1. Download and unzip the [PlanetsDemo\-pom\.zip](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/PlanetsDemo/PlanetsDemo-pom.zip) archive file\.
 
 1. Copy the source code from the `BluAge/planets-demo/PlanetsDemo-pom` directory of this repo to a new non\-versioned directory\.
 
@@ -113,35 +115,38 @@ You can start a build using AWS console or AWS CLI and check for errors\. For ex
 aws codebuild start-build --project-name {name-of-the-codebuild-project}
 ```
 
+**To view the progress of your build**
+
+1. On the CodeBuild console, choose **Build History**\.
+
+1. Choose **Build Run**, and then choose **Build Details**\.
+
+1. Scroll down to review the Buildspec file\.
+
 ## Overview of CodeBuild process<a name="tutorial-build-ba-acb-details"></a>
 
-* On the AWS CodeBuild Console, click on Build History to view the progress of your build.
-
-* Click on the Build Run and navigate to the Build Details tab
-
-* Scroll down to review the Buildspec file
-
-The CodeBuild step needs a Maven repository endpoint to execute a Maven build\. To obtain this endpoint, use `aws codeartifact get-repository-endpoint` in the `pre_build` section of the BuildSpec file\.
+The CodeBuild step needs a Maven repository endpoint to execute a Maven build\. To obtain this endpoint, use `aws codeartifact get-repository-endpoint` in the `pre_build` section of the Buildspec file\.
 
 ```
 aws codeartifact get-repository-endpoint --domain ${CODEARTIFACT_DOMAIN} \
     --repository ${CODEARTIFACT_REPO} --format maven --output text
 ```
 
-Another important value is the repository password which is represented by a token\. We do not store the password as plain text in the file for security reasons\. Instead, we use an environment variable `$CODEARTIFACT_TOKEN` which is also set by the `pre_build` section of the BuildSpec file\. The password is obtained by calling `aws codeartifact get-authorization-token`\.
+**Important**  
+The repository password is represented by a token\. For security reasons, do not store the password as plain text in the file\. Instead, use the `$CODEARTIFACT_TOKEN` environment variable in the `pre-build` section of the Buildspec file\. You can obtain the password by calling `aws codeartifact get-authorization-token`\. 
 
 ```
 aws codeartifact get-authorization-token --domain ${CODEARTIFACT_DOMAIN} \
     --query authorizationToken --output text
 ```
 
-To let Maven know we use a specific Maven repo, we create an additional file `settings.xml` and put that Maven repo endpoint into this file\. The endpoint is stored in the `$MAVEN_REPO_URL` variable and will be substituted on writing the file by the `pre_build` script\. We provide this settings file to `mvn` by using the `-s` option in the `build` section of the Buildspec file:
+To let Maven know to use a specific Maven repo, create an additional file called `settings.xml` and put the endpoing for the Maven repo into this file\. The endpoint is stored in the `$MAVEN_REPO_URL` variable\. The `pre-build` script substitutes the value when it writes the file\. To provide the settings file to Maven, use the `-s` option on the `mvn` command in the `build` section of the Buildspec file\.
 
 ```
 mvn -s settings.xml package
 ```
 
-The generated settings XML file will look like shown below:
+The generated `settings.xml` file will look like the following:
 
 ```
    <settings>
@@ -182,4 +187,3 @@ The generated settings XML file will look like shown below:
 If you no longer need the resources you created for this tutorial, delete them so that you won't continue to be charged for them\. Complete the following steps:
 + Delete the CodeBuild project\. For more information, see [Delete a build project in CodeBuild](https://docs.aws.amazon.com/codebuild/latest/userguide/delete-project.html) in the *AWS CodeBuild User Guide*\.
 + Delete the CodeCommit repository\. For more information, see [Delete an CodeCommit repository](https://docs.aws.amazon.com/codecommit/latest/userguide/how-to-delete-repository.html) in the *AWS CodeCommit User Guide*\.
-+ Delete the CodeArtifact repository\. For more information, see [Delete a repository](https://docs.aws.amazon.com/codeartifact/latest/ug/delete-repo.html) in the *CodeArtifact User Guide*\.

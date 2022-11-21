@@ -4,6 +4,6 @@ AWS Mainframe Modernization provides you with the ability to set up builds and c
 
 **Topics**
 + [Tutorial: Setting up the build for the Planets demo app](tutorial-build-ba.md)
-+ [Tutorial: Setting up the build for the BankDemo sample application](tutorial-build.md)
++ [Tutorial: Setting up the Micro Focus build for the BankDemo sample application](tutorial-build.md)
 + [Tutorial: Setting up a CI/CD pipeline for use with Blu Age Developer](tutorial-cicd-ba.md)
 + [Tutorial: Setting up a CI/CD pipeline for use with Micro Focus Enterprise Developer](tutorial-cicd-mf.md)

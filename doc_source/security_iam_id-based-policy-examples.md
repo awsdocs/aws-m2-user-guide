@@ -4,7 +4,7 @@ By default, users and roles don't have permission to create or modify AWS Mainfr
 
 To learn how to create an IAM identity\-based policy by using these example JSON policy documents, see [Creating IAM policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create-console.html) in the *IAM User Guide*\.
 
-For details about actions and resource types defined by AWS Mainframe Modernization, including the format of the ARNs for each of the resource types, see [Actions, Resources, and Condition Keys for AWS Mainframe Modernization ](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awskeymanagementservice.html) in the *Service Authorization Reference*\.
+For details about actions and resource types defined by AWS Mainframe Modernization, including the format of the ARNs for each of the resource types, see [Actions, Resources, and Condition Keys for AWS Mainframe Modernization](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awsmainframemodernizationservice.html) in the *Service Authorization Reference*\.
 
 **Topics**
 + [Policy best practices](#security_iam_service-with-iam-policy-best-practices)

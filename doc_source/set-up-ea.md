@@ -34,7 +34,7 @@ Libraries in `C:\Public`
 + [Image contents](#set-up-ea-image-contents)
 + [Prerequisites](#tutorial-ea-prerequisites)
 + [Step 1: Setup](#tutorial-ea-step1)
-+ [Step 2: Create the Amazon S3\-based virtual disk on Windows](#tutorial-ea-step2)
++ [Step 2: Create the Amazon S3\-based virtual folder on Windows](#tutorial-ea-step2)
 + [Step 3: Create an ODBC source for the Amazon RDS instance](#tutorial-ea-step3)
 + [Subsequent sessions](#tutorial-ea-step4)
 + [Troubleshooting workspace connection](#tutorial-ea-step5)
@@ -54,20 +54,41 @@ Libraries in `C:\Public`
 
 1. On the AppStream 2\.0 menu page, choose **Desktop** to reach the Windows desktop streamed by the fleet\.
 
-## Step 2: Create the Amazon S3\-based virtual disk on Windows<a name="tutorial-ea-step2"></a>
+## Step 2: Create the Amazon S3\-based virtual folder on Windows<a name="tutorial-ea-step2"></a>
 
 **Note**  
-If you already used `rclone` during the AWS Mainframe Modernization preview, you must update `run-rclone.cmd` to the newer version located in `C:\Users\Public`\.
+If you already used Rclone during the AWS Mainframe Modernization preview, you must update `m2-rclone.cmd` to the newer version located in `C:\Users\Public`\.
 
-1. Copy the `rclone.conf` and `run-rclone.cmd` files provided in `C:\Users\Public` to your home folder `C:\Users\PhotonUser\My Files\Home Folder` using File Explorer\. These files might already be present in this directory if you previously installed Enterprise Developer in your AppStream 2\.0 account\.
+1. Copy the `m2-rclone.conf` and `m2-rclone.cmd` files provided in `C:\Users\Public` to your home folder `C:\Users\PhotonUser\My Files\Home Folder` using File Explorer\.
 
-1. Update the `rclone.conf` config parameters with your Amazon S3 bucket name, your AWS access key and corresponding secret\.
+1. Update the `m2-rclone.conf` config parameters with your AWS access key and corresponding secret, as well as your AWS Region\.
 
-1. Update `your-local-folder-path` to the path of the directory where you want the application files synced from the Amazon S3 bucket that contains them\. This synced directory must be a subdirectory of the Home Folder in order for AppStream 2\.0 to properly back up and restore it on session start and end\.
+   ```
+   [m2-s3]
+   type = s3
+   provider = AWS
+   access_key_id = YOUR-ACCESS-KEY
+   secret_access_key = YOUR-SECRET-KEY
+   region = YOUR-REGION
+   acl = private
+   server_side_encryption = AES256
+   ```
 
-1. Open a Windows command prompt, cd to `C:\Users\Home Folder` if needed and run `run-rclone.cmd`\. When the command finishes, you should see the source code of the application located in Amazon S3 bucket in Windows File Explorer as disk `m2-s3` \(the name defined in the heading line of `rclone.conf`\.
+1. In `m2-rclone.cmd`, make the following changes:
+   + Change `your-s3-bucket` to your Amazon S3 bucket name\. For example, `m2-s3-mybucket`\.
+   + Change `your-s3-folder-key` to your Amazon S3 bucket key\. For example, `myProject`\.
+   + Change `your-local-folder-path` to the path of the directory where you want the application files synced from the Amazon S3 bucket that contains them\. For example, `D:\PhotonUser\My Files\Home Folder\m2-new`\. This synced directory must be a subdirectory of the Home Folder in order for AppStream 2\.0 to properly back up and restore it on session start and end\.
 
-To add new files to the set that you are working on or to update existing ones, upload the files to the Amazon S3 bucket and they will be synced to your directory at the next iteration defined in `run-rclone.cmd`\. Similarly, if you want to delete some files, delete them from the Amazon S3 bucket\. The next sync operation will delete them from your local directory\.
+   ```
+   :loop
+   timeout /T 10
+   "C:\Program Files\rclone\rclone.exe" sync m2-s3:your-s3-bucket/your-s3-folder-key "D:\PhotonUser\My Files\Home Folder\your-local-folder-path" --config "D:\PhotonUser\My Files\Home Folder\m2-rclone.conf"
+   goto :loop
+   ```
+
+1. Open a Windows command prompt, cd to `C:\Users\PhotonUser\My Files\Home Folder` if needed and run `m2-rclone.cmd`\. This command script runs a continuous loop, syncing your Amazon S3 bucket and key to the local folder every 10 seconds\. You can adjust the time out as needed\. You should see the source code of the application located in the Amazon S3 bucket in Windows File Explorer\.
+
+To add new files to the set that you are working on or to update existing ones, upload the files to the Amazon S3 bucket and they will be synced to your directory at the next iteration defined in `m2-rclone.cmd`\. Similarly, if you want to delete some files, delete them from the Amazon S3 bucket\. The next sync operation will delete them from your local directory\.
 
 ## Step 3: Create an ODBC source for the Amazon RDS instance<a name="tutorial-ea-step3"></a>
 

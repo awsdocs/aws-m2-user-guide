@@ -1,4 +1,4 @@
-# Working with runtime environments in AWS Mainframe Modernization<a name="environments-m2"></a>
+# Runtime environments in AWS Mainframe Modernization<a name="environments-m2"></a>
 
 If you're new to AWS Mainframe Modernization see the following topics to get started:
 + [What is AWS Mainframe Modernization?](what-is-m2.md)

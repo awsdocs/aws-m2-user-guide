@@ -6,7 +6,7 @@ This tutorial shows how to deploy and run the BankDemo sample application in a A
 + [Prerequisites](#tutorial-runtime-mf-prerequisites)
 + [Step 1: Create a database](#tutorial-runtime-mf-db)
 + [Step 2: Create and configure an AWS Key Management Service key](#tutorial-runtime-mf-key)
-+ [Step 3: Create and configure an AWS Secrets Manager secret](#tutorial-runtime-mf-secret)
++ [Step 3: Create and configure an AWS Secrets Manager database secret](#tutorial-runtime-mf-secret)
 + [Step 4: Create a runtime environment](#tutorial-runtime-mf-env)
 + [Step 5: Create an application](#tutorial-runtime-mf-app)
 + [Step 6: Deploy an application](#tutorial-runtime-mf-deploy)
@@ -19,8 +19,8 @@ This tutorial shows how to deploy and run the BankDemo sample application in a A
 ## Prerequisites<a name="tutorial-runtime-mf-prerequisites"></a>
 
 Before you start the tutorial, make sure you complete the following prerequisites:
-+ Upload the [BankDemo sample application](https://d1vi4vxke6c2hu.cloudfront.net/demo/bankdemo_runtime.zip) to a bucket in Amazon S3\. Make sure that the bucket is in the same Region as AWS Mainframe Modernization\. For more information, see the [Tutorial: Setting up the build for the BankDemo sample application](tutorial-build.md)\.
-+ Download the [catalog files](https://d1vi4vxke6c2hu.cloudfront.net/demo/catalog.zip) that the BankDemo sample application requires to locate the application data, and then upload them to an Amazon S3 bucket, such as `s3://m2-tutorial`\.
++ Download the [BankDemo sample application](https://d1vi4vxke6c2hu.cloudfront.net/demo/bankdemo_runtime.zip), unzip it, and upload the files to a bucket in Amazon S3\. Make sure that the bucket is in the same Region as AWS Mainframe Modernization\. For more information, see the [Tutorial: Setting up the Micro Focus build for the BankDemo sample application](tutorial-build.md)\.
++ Download the [catalog files](https://d1vi4vxke6c2hu.cloudfront.net/demo/catalog.zip) that the BankDemo sample application requires to locate the application data, unzip them, and then upload them to an Amazon S3 bucket, such as `s3://m2-tutorial`\.
 + Make sure that your IAM user has the `CREATEDB` permission\.
 
 ## Step 1: Create a database<a name="tutorial-runtime-mf-db"></a>
@@ -33,8 +33,8 @@ In this step, you create a PostgreSQL database in either Amazon Relational Datab
 
 1. After you create the database, configure it by making the following changes:
    + Create a custom parameter group by following the instructions in [Creating a DB parameter group](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithDBInstanceParamGroups.html#USER_WorkingWithParamGroups.Creating)\.
-   + Associate your custom parameter group with the database by following the instructions in [Associating a DB parameter group with a DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithDBInstanceParamGroups.html#USER_WorkingWithParamGroups.Associating)\.
    + Change the `max_prepared_transactions` parameter value to 100 by following the instructions in [Modifying parameters in a DB parameter group](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithDBInstanceParamGroups.html#USER_WorkingWithParamGroups.Modifying)\.
+   + Associate your custom parameter group with the database by following the instructions in [Associating a DB parameter group with a DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithDBInstanceParamGroups.html#USER_WorkingWithParamGroups.Associating)\.
 
    For more information on parameter groups, see [Working with parameter groups](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html)\.
 
@@ -44,14 +44,14 @@ In this step, you create a PostgreSQL database in either Amazon Relational Datab
 
 1. After you create the database, configure it by making the following changes:
    + Create a custom DB cluster parameter group by following the instructions in [Creating a DB cluster parameter group](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_WorkingWithDBClusterParamGroups.html#USER_WorkingWithParamGroups.CreatingCluster)\.
-   + Associate your custom parameter group with the database by following the instructions in [Associating a DB cluster parameter group with a DB cluster](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_WorkingWithDBClusterParamGroups.html#USER_WorkingWithParamGroups.AssociatingCluster)\.
    + Change the `max_prepared_transactions` parameter value to 100 by following the instructions in [Modifying parameters in a DB cluster parameter group](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_WorkingWithDBClusterParamGroups.html#USER_WorkingWithParamGroups.ModifyingCluster)\.
+   + Associate your custom parameter group with the database by following the instructions in [Associating a DB cluster parameter group with a DB cluster](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_WorkingWithDBClusterParamGroups.html#USER_WorkingWithParamGroups.AssociatingCluster)\.
 
    For more information on parameter groups, see [Working with parameter groups](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_WorkingWithParamGroups.html)\. For more information on DB cluster parameter groups, see [Working with DB cluster parameter groups](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_WorkingWithDBClusterParamGroups.html)\.
 
 ## Step 2: Create and configure an AWS Key Management Service key<a name="tutorial-runtime-mf-key"></a>
 
-To store the credentials securely for the Amazon RDS or Aurora database instance that you created for this tutorial, you need to create a secret in AWS Secrets Manager\. To create a secret in Secrets Manager, you need to create an AWS Key Management Service key\.
+To store the credentials securely for the Amazon RDS or Aurora database instance that you created for this tutorial, you need to create a database secret in AWS Secrets Manager\. To create a database secret in Secrets Manager, you need to create an AWS Key Management Service key\.
 
 To create a AWS KMS key, follow the steps in [Creating keys](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) in the *AWS Key Management Service Developer Guide*\.
 
@@ -68,9 +68,9 @@ To grant AWS Mainframe Modernization decrypt permissions, you must update the ke
 }
 ```
 
-## Step 3: Create and configure an AWS Secrets Manager secret<a name="tutorial-runtime-mf-secret"></a>
+## Step 3: Create and configure an AWS Secrets Manager database secret<a name="tutorial-runtime-mf-secret"></a>
 
-To create a secret in Secrets Manager for storing the credentials for the database you created previously, follow the steps in [Create a secret](https://docs.aws.amazon.com/secretsmanager/latest/userguide/manage_create-basic-secret.html) in the *AWS Secrets Manager User Guide*\.\. Specify the key you created in the previous steps for the encryption key\.
+To create a database secret in Secrets Manager for storing the credentials for the database you created previously, follow the steps in [Create a secret](https://docs.aws.amazon.com/secretsmanager/latest/userguide/manage_create-basic-secret.html) in the *AWS Secrets Manager User Guide*\. Specify the key you created in the previous steps for the encryption key\.
 
 During the key creation process, choose **Resource permissions \- optional**, then choose **Edit permissions**\. In the editor, add a resource\-based policy, such as the following, to retrieve the content of the encrypted fields\.
 
@@ -119,83 +119,69 @@ When a banner appears that says `Environment name was created successfully`, the
 1. In the navigation pane, choose **Applications**\. Then choose **Create application**\.  
 ![\[The applications page with the Create application shown.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/app-create.png)
 
-1. In **Specify basic information**, enter a name and description for the application, and make sure **Micro Focus** is selected\. Then choose **Next**\.  
+1. In **Specify basic information**, enter `BankDemo` for the name and make sure **Micro Focus** is selected\. Then choose **Next**\.  
 ![\[The create applications page with the Micro Focus engine type selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/m2-mf-create-app.png)
 
 1. On the **Specify resources and configurations** page, choose how you want to specify the application definition\. You can use the inline editor or else specify an application definition JSON file in an Amazon S3 bucket\. Paste or type the application definition or provide the Amazon S3 location\. Then choose **Next**\.  
 ![\[The specify resources and configurations page with a JSON file displayed in the online editor.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/app-config.png)
 
-   You can use the following sample application definition file\. Make sure to replace `$SECRET_ARN`, `$S3_BUCKET`, and `$S3_PREFIX` with your correct values\.
+   You can use the following sample application definition file\. Make sure to replace `$s3_bucket` and `$s3-key-prefix` with the correct values for your Amazon S3 bucket and the folder where you uploaded the BankDemo sample files\.
 
    ```
    {
-       "resources": [
-           {
-               "resource-type": "vsam-config",
-               "resource-id": "vsam-1",
-               "properties": {
-                   "secret-manager-arn": "$SECRET_ARN"
-               }
-           },
-           {
-               "resource-type": "cics-resource-definition",
-               "resource-id": "resource-definition-1", 
-               "properties": {
-                   "file-location": "${s3-source}/RDEF",
-                   "system-initialization-table": "BNKCICV"
-               }
-           },
-           {
-               "resource-type": "cics-transaction",
-               "resource-id": "transaction-1", 
-               "properties": {
-                   "file-location": "${s3-source}/transaction"
-               }
-           },
-           {
-               "resource-type": "mf-listener",
-               "resource-id": "listener-1", 
-               "properties": {
-                   "port": 6000,
-                   "conversation-type": "tn3270"
-               }
-           },
-           {
-               "resource-type": "xa-resource",
-               "resource-id": "xa-resource-1",
-               "properties": {
-                   "name": "XASQL",
-                   "module": "${s3-source}/xa/ESPGSQLXA64.so",
-                   "secret-manager-arn": "$SECRET_ARN"
-               }
-           },
-           {
-               "resource-type": "jes-initiator",
-               "resource-id": "jes-initiator-1",
-               "properties": {
-                   "initiator-class": "A",
-                   "description": "initiator...."
-               }
-           
-           },
-           {
-               "resource-type": "jcl-job",
-               "resource-id": "jcl-job-1",
-               "properties": {
-                   "file-location": "${s3-source}/jcl"
-               }
+       "template-version": "2.0",
+       "source-locations": [{
+           "source-id": "s3-source",
+           "source-type": "s3",
+           "properties": {
+               "s3-bucket": "my-bankdemo-bucket",
+               "s3-key-prefix": "v1"
            }
-       ],
-       "source-locations": [
-           {
-               "source-id": "s3-source",
-               "source-type": "s3",
-               "properties": {
-                   "s3-bucket": "$S3_BUCKET",
-                   "s3-key-prefix": "$S3_PREFIX"
-               }
-           }
-       ]
+       }],
+       "definition": {
+           "listeners": [{
+               "port": 6000,
+               "type": "TN3270"
+           }],
+           "dataset-location": {
+               "db-locations": [{
+                   "name": "Database1",
+                   "secret-manager-arn": "arn:aws:secretsmanager:Region:123456789012:secret:PostgreSQL_database-1-n0A0BC"
+               }]
+           },
+           "file-locations": [{
+               "name": "Mount1",
+               "file-location": "/m2/mount/catalog/"
+           }],
+           "catalog-location": "${s3-source}/dataset/catalog"
+   
+       },
+       "batch-settings": {
+           "initiators": [{
+               "classes": ["A", "B"],
+               "description": "initiator_AB...."
+           }, {
+               "classes": ["C", "D"],
+               "description": "initiator_CD...."
+           }],
+           "printers": [{
+               "classes": ["A"]
+           }],
+           "jcl-file-location": "${s3-source}/jcl",
+           "binary-file-location": "${s3-source}/batch/binaries",
+           "jes-dataset-location": "${s3-source}/batch/jes",
+           "Proclib-location": "${s3-source}/batch/procLib"
+       },
+       "cics-settings": {
+           "binary-file-location": "${s3-source}/transaction",
+           "csd-file-location": "${s3-source}/RDEF",
+           "system-initialization-table": "BNKCICV"
+       },
+       "xa-resources": [{
+           "name": "XASQL",
+           "secret-manager-arn": "arn:aws:secretsmanager:Region:123456789012:secret:PostgreSQL_database-1-n0A0BC",
+           "module": "${s3-source}/xa/ESPGSQLXA64.so"
+       }]
    }
    ```
 **Note**  
@@ -226,9 +212,11 @@ When the BankDemo application deploys successfully, the status changes to **Read
 
 1. In the navigation pane, choose **Applications**, and then choose **BankDemo**\. Choose the **Data sets** tab\. Then choose how you want to specify the data sets\. You can use a data set configuration JSON file in an Amazon S3 bucket, or specify the data set configuration values separately\.
 
-1. Choose **Add new item** and add each data set and choose **Submit** after you provide the information for each data set\. 
+1. Choose **Add new item**\. Add each data set and choose **Submit** after you provide the information for each data set\. 
 
-   The following table lists the data sets that you must import\. Replace `$S3_DATASET_PREFIX` with your Amazon S3 bucket that contains the catalog data, for example, `S3_DATASET_PREFIX=s3://m2-tutorial/catalog`\.    
+   The following table lists the data sets that you must import\. Replace `$S3_DATASET_PREFIX` with your Amazon S3 bucket that contains the catalog data, for example, `S3_DATASET_PREFIX=s3://m2-tutorial/catalog`\.
+**Note**  
+Make sure you specify the Amazon S3 bucket name, not the bucket ARN\. Do not specify an absolute path to resources in the bucket\.    
 [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/m2/latest/userguide/tutorial-runtime.html)
 
    Alternatively, you can specify the data set configuration in a JSON file, such as the following\. This file shows all the required data sets\. Replace `$S3_DATASET_PREFIX` with your Amazon S3 bucket that contains the catalog data, for example, `m2-tutorial/catalog`\.
@@ -237,8 +225,23 @@ When the BankDemo application deploys successfully, the status changes to **Read
    {
        "dataSets": [{
                "dataSet": {
-                   "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKACC.DAT?folder=/DATA",
-                   "name": "MFI01V.MFIDEMO.BNKACC"
+                   "storageType": "Database",
+                   "datasetName": "MFI01V.MFIDEMO.BNKACC",
+                   "relativePath": "DATA",
+                   "datasetOrg": {
+                       "vsam": {
+                           "format": "KS",
+                           "encoding": "A",
+                           "primaryKey": {
+                               "length": 9,
+                               "offset": 5
+                           }
+                       }
+                   },
+                   "recordLength": {
+                       "min": 200,
+                       "max": 200
+                   }
                },
                "externalLocation": {
                    "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKACC.DAT"
@@ -246,8 +249,23 @@ When the BankDemo application deploys successfully, the status changes to **Read
            },
            {
                "dataSet": {
-                   "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKATYPE.DAT?folder=/DATA",
-                   "name": "MFI01V.MFIDEMO.BNKATYPE"
+                   "storageType": "Database",
+                   "datasetName": "MFI01V.MFIDEMO.BNKATYPE",
+                   "relativePath": "DATA",
+                   "datasetOrg": {
+                       "vsam": {
+                           "format": "KS",
+                           "encoding": "A",
+                           "primaryKey": {
+                               "length": 1,
+                               "offset": 0
+                           }
+                       }
+                   },
+                   "recordLength": {
+                       "min": 100,
+                       "max": 100
+                   }
                },
                "externalLocation": {
                    "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKATYPE.DAT"
@@ -255,8 +273,23 @@ When the BankDemo application deploys successfully, the status changes to **Read
            },
            {
                "dataSet": {
-                   "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKCUST.DAT?folder=/DATA",
-                   "name": "MFI01V.MFIDEMO.BNKCUST"
+                   "storageType": "Database",
+                   "datasetName": "MFI01V.MFIDEMO.BNKCUST",
+                   "relativePath": "DATA",
+                   "datasetOrg": {
+                       "vsam": {
+                           "format": "KS",
+                           "encoding": "A",
+                           "primaryKey": {
+                               "length": 5,
+                               "offset": 0
+                           }
+                       }
+                   },
+                   "recordLength": {
+                       "min": 250,
+                       "max": 250
+                   }
                },
                "externalLocation": {
                    "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKCUST.DAT"
@@ -264,8 +297,23 @@ When the BankDemo application deploys successfully, the status changes to **Read
            },
            {
                "dataSet": {
-                   "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKHELP.DAT?folder=/DATA",
-                   "name": "MFI01V.MFIDEMO.BNKHELP"
+                   "storageType": "Database",
+                   "datasetName": "MFI01V.MFIDEMO.BNKHELP",
+                   "relativePath": "DATA",
+                   "datasetOrg": {
+                       "vsam": {
+                           "format": "KS",
+                           "encoding": "A",
+                           "primaryKey": {
+                               "length": 8,
+                               "offset": 0
+                           }
+                       }
+                   },
+                   "recordLength": {
+                       "min": 83,
+                       "max": 83
+                   }
                },
                "externalLocation": {
                    "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKHELP.DAT"
@@ -273,13 +321,29 @@ When the BankDemo application deploys successfully, the status changes to **Read
            },
            {
                "dataSet": {
-                   "location": "sql://ESPACDatabase/VSAM/MFI01V.MFIDEMO.BNKTXN.DAT?folder=/DATA",
-                   "name": "MFI01V.MFIDEMO.BNKTXN"
+                   "storageType": "Database",
+                   "datasetName": "MFI01V.MFIDEMO.BNKTXN",
+                   "relativePath": "DATA",
+                   "datasetOrg": {
+                       "vsam": {
+                           "format": "KS",
+                           "encoding": "A",
+                           "primaryKey": {
+                               "length": 16,
+                               "offset": 26
+                           }
+                       }
+                   },
+                   "recordLength": {
+                       "min": 400,
+                       "max": 400
+                   }
                },
                "externalLocation": {
                    "s3Location": "$S3_DATASET_PREFIX/data/MFI01V.MFIDEMO.BNKTXN.DAT"
                }
            }
+   
        ]
    }
    ```
@@ -346,5 +410,5 @@ If you no longer need the resources that you created for this tutorial, delete t
 ## Next steps<a name="tutorial-runtime-mf-next"></a>
 
 As next steps, you can see the following resources:
-+ To learn how to set up a build for your modernized applications, see [Tutorial: Setting up the build for the BankDemo sample application](tutorial-build.md)
++ To learn how to set up a build for your modernized applications, see [Tutorial: Setting up the Micro Focus build for the BankDemo sample application](tutorial-build.md)
 + To learn how to set up a CI/CD pipeline for your modernized applications, see [Tutorial: Setting up a CI/CD pipeline for use with Micro Focus Enterprise Developer](tutorial-cicd-mf.md)

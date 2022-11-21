@@ -1,4 +1,4 @@
-# Working with applications in AWS Mainframe Modernization<a name="applications-m2"></a>
+# Applications in AWS Mainframe Modernization<a name="applications-m2"></a>
 
 If you're new to AWS Mainframe Modernization see the following topics to get started:
 + [What is AWS Mainframe Modernization?](what-is-m2.md)
@@ -15,4 +15,6 @@ An application in AWS Mainframe Modernization contains a migrated mainframe work
 + [Delete a AWS Mainframe Modernization application](applications-m2-delete.md)
 + [Submit batch jobs for AWS Mainframe Modernization applications](applications-m2-batch-job.md)
 + [Import data sets for AWS Mainframe Modernization applications](applications-m2-dataset.md)
++ [Create AWS resources for a migrated application](applications-m2-other-resources.md)
 + [AWS Mainframe Modernization application definition reference](applications-m2-definition.md)
++ [AWS Mainframe Modernization data set definition reference](datasets-m2-definition.md)

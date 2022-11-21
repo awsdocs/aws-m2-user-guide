@@ -31,22 +31,22 @@ This tutorial shows you how to import, edit, compile, and run the BankDemo sampl
 ## Prerequisites<a name="tutorial-cicd-mf-prereq"></a>
 
 Download the the following files\.
-+ `basic-infra.yaml`\.
++ `basic-infra.yaml`
   + [Download from Europe \(Frankfurt\) Region](https://d3lkpej5ajcpac.cloudfront.net/cicd/mf/basic-infra.yaml)\.
   + [Download from US East \(N\. Virginia\) Region](https://drm0z31ua8gi7.cloudfront.net/cicd/mf/basic-infra.yaml)\.
-+ `pipeline.yaml`\.
++ `pipeline.yaml`
   + [Download from Europe \(Frankfurt\) Region](https://d3lkpej5ajcpac.cloudfront.net/cicd/mf/pipeline.yaml)\.
   + [Download from US East \(N\. Virginia\) Region](https://drm0z31ua8gi7.cloudfront.net/cicd/mf/pipeline.yaml)\.
-+ `m2-code-sync-function.zip`\.
++ `m2-code-sync-function.zip`
   + [Download from Europe \(Frankfurt\) Region](https://d3lkpej5ajcpac.cloudfront.net/cicd/mf/m2-code-sync-function.zip)\.
   + [Download from US East \(N\. Virginia\) Region](https://drm0z31ua8gi7.cloudfront.net/cicd/mf/m2-code-sync-function.zip)\.
-+ `config_git.yml`\.
++ `config_git.yml`
   + [Download from Europe \(Frankfurt\) Region](https://d3lkpej5ajcpac.cloudfront.net/cicd/mf/config_git.yml)\.
   + [Download from US East \(N\. Virginia\) Region](https://drm0z31ua8gi7.cloudfront.net/cicd/mf/config_git.yml)\.
-+ `BANKDEMO-source.zip`\.
++ `BANKDEMO-source.zip`
   + [Download from Europe \(Frankfurt\) Region](https://d3lkpej5ajcpac.cloudfront.net/cicd/mf/BANKDEMO-source.zip)\.
   + [Download from US East \(N\. Virginia\) Region](https://drm0z31ua8gi7.cloudfront.net/cicd/mf/BANKDEMO-source.zip)\.
-+ `BANKDEMO-exercise.zip`\.
++ `BANKDEMO-exercise.zip`
   + [Download from Europe \(Frankfurt\) Region](https://d3lkpej5ajcpac.cloudfront.net/cicd/mf/BANKDEMO-exercise.zip)\.
   + [Download from US East \(N\. Virginia\) Region](https://drm0z31ua8gi7.cloudfront.net/cicd/mf/BANKDEMO-exercise.zip)\.
 
@@ -55,13 +55,13 @@ The purpose of each file is as follows:
 `basic-infra.yaml`  
 This AWS CloudFormation template creates the basic infrastructure needed for the CI/CD pipeline: VPC, Amazon S3 buckets, and so on\.
 
-`pipeline.yaml`\.  
+`pipeline.yaml`  
 This AWS CloudFormation template is used by an Lambda function to launch the pipeline stack\. Make sure this template is located in a publicly accessible Amazon S3 bucket\. Add the link to this bucket as the default value for the `PipelineTemplateURL`parameter in the `basic-infra.yaml` template\.
 
-`m2-code-sync-function.zip`\.  
+`m2-code-sync-function.zip`  
 This Lambda function creates the CodeCommit repository, the directory structure based on the `config_git.yaml`, and launches the pipeline stack using `pipeline.yaml`\. Make sure this zip file is available in a publicly accessible Amazon S3 bucket in all the AWS Regions where AWS Mainframe Modernization is supported\. We recommend that you store the file in a bucket in one AWS Region and replicate it to buckets across all AWS Regions\. Use a naming convention for the bucket with a suffix that identifies the specific AWS Region \(for example, `m2-cicd-deployment-source-eu-west-1` \) and add the prefix `m2-cicd-deployment-source` as default value for parameter `DeploymentSourceBucket` and form the full bucket by using the AWS CloudFormation substitution function `!Sub {DeploymentSourceBucket}-${AWS::Region}` while referring to that bucket in the `basic-infra.yaml` template for resource `SourceSyncLambdaFunction`\.
 
-`config_git.yml`\.  
+`config_git.yml`  
  CodeCommit directory structure definition\. For more information, see [Sample YAML Trigger File config\_git\.yml](#tutorial-cicd-mf-repo-sample)\.
 
 `BANKDEMO-source.zip`\.  
@@ -72,22 +72,37 @@ BankDemo source code and configuration file created from the CodeCommit reposito
 
 ## Create CI/CD pipeline basic infrastructure<a name="tutorial-cicd-mf-basic"></a>
 
-Open the following link to quick launch the AWS Mainframe Modernization CI/CD Pipeline Foundation stack through AWS CloudFormation in the AWS Region of your choice \(you should have already logged in to your AWS Management Console while opening the link\)\. This stack will create an Amazon S3 bucket where you need to upload your application code \(instructions are stated in next section\) and supporting Lambda function to create the necessary resources like CodeCommit repository, CodePipeline pipeline, etc\.
+Use the AWS CloudFormation template `basic-infra.yaml` to create the CI/CD pipeline basic infrastructure stack through the AWS CloudFormation console\. This stack creates Amazon S3 buckets where you upload your application code and data, and a supporting AWS Lambda function to create other necessary resources such as an AWS CodeCommit repository and an AWS CodePipeline pipeline\.
 
 **Note**  
 To launch this stack you need permissions to administer IAM, Amazon S3, Lambda, and AWS CloudFormation and permissions to use AWS KMS\.
 
-1. Click one of the following links to launch AWS CloudFormation and open the **Quick create stack** page:
-   + Launch stack in US East \(N\. Virginia\)
-   + Launch stack in US West \(Oregon\)
-   + Launch stack in Europe \(Frankfurt\)
-   + Launch stack in South America \(São Paulo\)
-   + Launch stack in Asia Pacific \(Sydney\)
+1. Sign in to the AWS Management Console and open the AWS CloudFormation console at [https://console\.aws\.amazon\.com/cloudformation](https://console.aws.amazon.com/cloudformation/)\.
 
-   All the parameters are pre\-populated appropriately so you don’t need to modify them\.
+1. Create a new stack by using one of the following options:
+   + Choose **Create Stack**\. This is the only option if you have a currently running stack\.
+   + On the **Stacks** page, choose **Create Stack**\. This option is visible only if you have no running stacks\.
+
+1. On the **Specify template** page:
+   + In **Prepare template**, choose **Template is ready**\.
+   + In **Specify template**, choose **Amazon S3 URL** as the template source and enter one of the following URLs depending on your AWS Region\.
+     + `https://m2-us-east-1.s3.amazonaws.com/cicd/mf/basic-infra.yaml`
+     + `https://m2-eu-central-1.s3.eu-central-1.amazonaws.com/cicd/mf/basic-infra.yaml`
+   + To accept your settings, choose **Next**\.
+
+   The **Create stack** page opens\.   
+![\[The stack details page with AWS Mainframe Modernization values populated.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/m2-mf-cicd-stack-details.png)
+
+   Make the following changes:
+   + Provide appropriate values for **Stack name** and parameters for **Networking Configuration**\.
+   + Most parameters in **Deployment Configurations** are pre\-populated appropriately so you don’t need to modify them\. Depending on your AWS Region, change the pipeline AWS CloudFormation template to one of the following Amazon S3 URLs\.
+     + `https://m2-us-east-1.s3.amazonaws.com/cicd/mf/pipeline.yaml`
+     + `https://m2-eu-central-1.s3.eu-central-1.amazonaws.com/cicd/mf/pipeline.yaml`
+   + Choose **Next**\.
 **Note**  
-Don’t change the parameters unless you have modified the AWS CloudFormation template yourself\.   
-![\[The quick create stack page with AWS Mainframe Modernization values populated.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/cfn-quick-create.png)
+Don’t change the default parameter values unless you have modified the AWS CloudFormation template yourself\.
+
+1. In **Configure stack options**, choose **Next**\.
 
 1. In **Capabilities**, choose **I acknowledge that AWS CloudFormation might create IAM resources** to allow permission for AWS CloudFormation to create IAM Role on your behalf\. Choose **Create stack**\.
 **Note**  

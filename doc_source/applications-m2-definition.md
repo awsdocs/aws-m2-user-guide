@@ -40,6 +40,8 @@ Specifies the locations of the files and other resources that the application re
 Provides the details of the source location\. Each property is specified with a string\.  
 + `s3-bucket` \- Required\. Specifies the name of the Amazon S3 bucket where the files are stored\.
 + `s3-key-prefix` \- Required\. Specifies the name of the folder in the Amazon S3 bucket where the files are stored\.
+**Note**  
+Make sure you specify the Amazon S3 bucket name, not the bucket ARN\. Do not specify an absolute path to resources in the bucket\.
 
 ## Definition section overview<a name="applications-m2-definition-overview"></a>
 
@@ -146,14 +148,14 @@ Specifies the properties of the database used with the application\. The databas
 + `nb-threads` \- Optional\. Specifies how many dedicated threads are used for the write\-behind mechanism that the blusam engine relies on\. The default is 8\.
 + `batch-size` \- Optional\. Specifies the threshold that the write\-behind mechanism uses to start batch storage operations\. The threshold represents the number of modified records that will start a batch storage operation to ensure that modified records are persisted\. The trigger itself is based on a combination of batch\-size and an elapsed time of one second, whichever is reached first\. The default is 10000\.
 + `name` \- Optional\. Specifies the name of the database\.
-+ `secret-manager-arn` \- Specifies the Amazon Resource Name \(ARN\) of the secret that contains the database credentials\. For more information, see [Step 3: Create and configure an AWS Secrets Manager secret](tutorial-runtime.md#tutorial-runtime-mf-secret)\.
++ `secret-manager-arn` \- Specifies the Amazon Resource Name \(ARN\) of the secret that contains the database credentials\. For more information, see [Step 3: Create and configure an AWS Secrets Manager database secret](tutorial-runtime.md#tutorial-runtime-mf-secret)\.
 
 **redis**  
 Specifies the properties of the Redis cache that the application uses to store temporary data that it needs in a central location to improve performance\. We recommend that you both encrypt and password\-protect the Redis cache\.  
 + `hostname` \- Specifies the location of the Redis cache\.
 + `port` \- Specifies the port, typically 6379, where the Redis cache sends and receives communication\.
 + `useSsl` \- Specifies whether the Redis cache is encrypted\. If the cache is not encrypted, set `useSsl` to false\.
-+ `secret-manager-arn` \- Specifies the Amazon Resource Name \(ARN\) of the secret that contains the Redis cache password\. If the Redis cache is not password\-protected, do not specify `secret-manager-arn`\. For more information, see [Step 3: Create and configure an AWS Secrets Manager secret](tutorial-runtime.md#tutorial-runtime-mf-secret)\.
++ `secret-manager-arn` \- Specifies the Amazon Resource Name \(ARN\) of the secret that contains the Redis cache password\. If the Redis cache is not password\-protected, do not specify `secret-manager-arn`\. For more information, see [Step 3: Create and configure an AWS Secrets Manager database secret](tutorial-runtime.md#tutorial-runtime-mf-secret)\.
 
 ### Amazon Cognito authentication and authorization handler \- optional<a name="applications-m2-definition-ba-details-cognito"></a>
 
@@ -198,6 +200,9 @@ The following sample definition section is for the Micro Focus runtime engine, a
             "port": 5101,
             "type": "TN3270"
         }],
+        "tls-configuration" : {
+            "enable-tls": true
+        },        
         "dataset-location": {
             "db-locations": [{
                 "name": "Database1",
@@ -347,6 +352,19 @@ Specifies the location of the CICS resource definition \(CSD\) file for this app
 
 **system\-initialization\-table**  
 Specifies the system initialization table \(SIT\) that the migrated application uses\. For more information, see [CICS Resource Definitions](https://www.microfocus.com/documentation/enterprise-developer/ed70/ES-UNIX/HRMTRHCSDS01.html) in the *Micro Focus Enterprise Server* documentation\. 
+
+### TLS Configuration \- optional<a name="applications-m2-definition-mf-details-tls"></a>
+
+Specify whether TLS is enabled for the application\.
+
+```
+  "tls-configuration" : {
+            "enable-tls": true
+        }
+```
+
+**enable\-tls**  
+Required\. Set to `true` if your application uses TLS\.
 
 ### XA resources \- required<a name="applications-m2-definition-mf-details-xa"></a>
 

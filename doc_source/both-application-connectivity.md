@@ -26,4 +26,12 @@ Check whether the Amazon VPC security group associated with the runtime environm
 
 1. In **Security & Network**, choose the security group\. The link opens the details of the security group in the Amazon VPC console\.
 
-1. If necessary, choose **Edit inbound rules** and follow the instructions in [Work with security group rules](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html#working-with-security-group-rules) in *Amazon VPC User Guide*\.
+1. If necessary, choose **Edit inbound rules** and add the following rule if not already present:  
+Type  
+Custom TCP  
+Port  
+8196 or the port that matches the listener properties specified in the application definition\. For more information, see [Step 2: Create the application definition](tutorial-runtime-ba.md#tutorial-runtime-ba-step2)\.  
+Source  
+The IP address from where you are calling the application\. You can choose **myIP** from the dropdown\. If you still have timeout issues, try choosing **Anywhere IPV4** or **Anywhere IPV6**\. Make sure to stop the application and start it again after you add the inbound rule on the security group\.
+
+   For more information, see [Work with security group rules](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html#working-with-security-group-rules) in *Amazon VPC User Guide*\.

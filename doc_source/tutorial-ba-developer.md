@@ -103,13 +103,14 @@ Do not include the `-dev` suffix in `gapwalk.version`, so for example a valid va
 
 1. In **Import Maven Projects**, provide the location of the extracted files and choose **Finish**\.
 
-Eclipse will immediately start downloading required Maven dependencies and building the project\.
+   Eclipse will immediately start downloading required Maven dependencies and building the project\.
 
-You can safely ignore the following popup, because Maven will download a local copy of node\.js to build the Angular \(\*\-web\) part of the project:
-
+   You can safely ignore the following popup, because Maven will download a local copy of node\.js to build the Angular \(\*\-web\) part of the project:  
 ![\[Warning message about missing node.js.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-node-warning.png)
 
-Wait until the end of the build, which you can follow in the **Progress** View\.
+   Wait until the end of the build, which you can follow in the **Progress** View\.
+
+1. In Eclipse, right\-click the project and choose **Run as**, and then choose **Maven install**\. The `war` file is created under `PlanetsDemoPom/PlanetsDemo-web/target/PlanetsDemo-web-1.0.0.war` after the Maven installation succeeds\.
 
 ## Step 6: Configure a Tomcat server<a name="tutorial-ba-developer-config-tomcat"></a>
 

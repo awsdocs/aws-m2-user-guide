@@ -1,35 +1,26 @@
 # Tutorial: Set up AppStream 2\.0 for use with Blu Age Developer IDE<a name="set-up-appstream-ba"></a>
 
-This document describes how to create an AppStream 2\.0 fleet for use with Blu Age Developer IDE\.
+This document describes how to set up Blu Age Developer IDE on an AppStream 2\.0 fleet\.
 
 **Topics**
-+ [Prerequisites](#set-up-aas2-ba-prereqs)
-+ [Required artifacts](#set-up-appstream-ba-artifacts)
-+ [Create the fleet with AWS CloudFormation](#set-up-appstream-ba-cfn)
-+ [Access an instance](#set-up-appstream-ba-access)
++ [Prerequisite](#set-up-aas2-ba-prereqs)
++ [Step 1: Create an Amazon S3 bucket](#set-up-aas2-ba-create-bucket)
++ [Step 2: Attach a policy to the Amazon S3 bucket](#set-up-aas2-ba-create-bucket-policy)
++ [Step 3: Upload the files to the Amazon S3 bucket](#set-up-aas2-ba-upload)
++ [Step 4: Download AWS CloudFormation templates](#set-up-aas2-ba-download-templates)
++ [Step 5: Create the fleet with AWS CloudFormation](#set-up-appstream-ba-cfn)
++ [Step 6: Access an instance](#set-up-appstream-ba-access)
 + [Clean up resources](#set-up-appstream-ba-clean)
 
-## Prerequisites<a name="set-up-aas2-ba-prereqs"></a>
-+ Download the required artifacts listed in [Required artifacts](#set-up-appstream-ba-artifacts)\.
-+ Create an Amazon S3 bucket with the same structure as that shown in [Required artifacts](#set-up-appstream-ba-artifacts)\.
+## Prerequisite<a name="set-up-aas2-ba-prereqs"></a>
 
-## Required artifacts<a name="set-up-appstream-ba-artifacts"></a>
+Download the [archive file](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/appstream-bluage-developer-ide.zip) that contains the artifacts that you need to set up Blu Age Developer IDE under AppStream 2\.0\.
 
-Use the following links to download the required artifacts:
-+ [cfn\-m2\-appstream\-elastic\-fleet\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-elastic-fleet-linux.yaml)
-+ [cfn\-m2\-appstream\-bluage\-dev\-tools\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-bluage-dev-tools-linux.yaml)
-+ [cfn\-m2\-appstream\-bluage\-shared\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-bluage-shared-linux.yaml)
-+ [cfn\-m2\-appstream\-chrome\-linux\.yam](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-chrome-linux.yaml)
-+ [cfn\-m2\-appstream\-eclipse\-jee\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-eclipse-jee-linux.yaml)
-+ [cfn\-m2\-appstream\-pgadmin\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-pgadmin-linux.yaml)
+## Step 1: Create an Amazon S3 bucket<a name="set-up-aas2-ba-create-bucket"></a>
 
-For this tutorial, all required artifacts must be stored in an Amazon S3 bucket under a common prefix of `appstream/bluage/developer-ide/`\. You will need to recreate this structure in a bucket that you create in order to complete this tutorial\.
+Create an Amazon S3 bucket in the same AWS Region as the fleet you will create\. This bucket will contain the artifacts you need to complete this tutorial\.
 
-The contents of the Amazon S3 bucket are as follows:
-
-![\[The files included in the Amazon S3 bucket for setting up Blu Age developer IDE on AppStream 2.0\]](http://docs.aws.amazon.com/m2/latest/userguide/images/aas-ba-artifacts.png)
-
-The following sections describe how to use those assets\.
+## Step 2: Attach a policy to the Amazon S3 bucket<a name="set-up-aas2-ba-create-bucket-policy"></a>
 
 Attach the following policy to the Amazon S3 bucket you create for this tutorial\. Make sure to replace `MYBUCKET` with the actual name of the bucket you created\.
 
@@ -48,11 +39,23 @@ Attach the following policy to the Amazon S3 bucket you create for this tutorial
 }
 ```
 
-## Create the fleet with AWS CloudFormation<a name="set-up-appstream-ba-cfn"></a>
+## Step 3: Upload the files to the Amazon S3 bucket<a name="set-up-aas2-ba-upload"></a>
 
-The `CloudFormation/` folder contains the templates needed to create and populate the AppStream 2\.0 fleet\.
+Unzip the files you downloaded in the Prerequisite and upload the `appstream` folder to the Amazon S3 bucket\. Uploading this folder will create the correct structure in your Amazon S3 bucket\.
 
-Those templates expect the above assets to be stored in an `appstream/bluage/developer-ide/` Amazon S3 bucket\. The bucket must be in the same AWS Region as the fleet being created\. If that is not the case, you might need to modify the `S3Bucket` properties accordingly\.
+## Step 4: Download AWS CloudFormation templates<a name="set-up-aas2-ba-download-templates"></a>
+
+Download the following AWS CloudFormation templates, which are required to create and populate the AppStream 2\.0 fleet\.
++ [cfn\-m2\-appstream\-elastic\-fleet\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-elastic-fleet-linux.yaml)
++ [cfn\-m2\-appstream\-bluage\-dev\-tools\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-bluage-dev-tools-linux.yaml)
++ [cfn\-m2\-appstream\-bluage\-shared\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-bluage-shared-linux.yaml)
++ [cfn\-m2\-appstream\-chrome\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-chrome-linux.yaml)
++ [cfn\-m2\-appstream\-eclipse\-jee\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-eclipse-jee-linux.yaml)
++ [cfn\-m2\-appstream\-pgadmin\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-pgadmin-linux.yaml)
+
+## Step 5: Create the fleet with AWS CloudFormation<a name="set-up-appstream-ba-cfn"></a>
+
+In this step, you use the `cfn-m2-appstream-elastic-fleet-linux.yaml` AWS CloudFormation template to create an AppStream 2\.0 fleet and stack to host the Blu Age Developer IDE\. After you create the fleet and stack, you will run the other AWS CloudFormation templates you downloaded in the previous step to install the Developer IDE and other required tools\.
 
 1. Navigate to AWS CloudFormation in the AWS Management console, and choose **Stacks**\.
 
@@ -62,11 +65,22 @@ Those templates expect the above assets to be stored in an `appstream/bluage/dev
 1. In **Create stack**, choose **Template is ready** and **Upload a template file**:  
 ![\[The AWS CloudFormation create stack page with template is ready and upload a template file selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/cfn-ba-create-stack.png)
 
-1. Choose **Choose file**, and navigate to file `cfn-m2-appstream-elastic-fleet-linux.yaml` to create the fleet\.
+1. Choose **Choose file**, and navigate to file `cfn-m2-appstream-elastic-fleet-linux.yaml`\. Choose **Next**\.
 
-Once the fleet is created, repeat the previous steps with the other templates to declare the required applications\.
+1. In **Specify stack details**, provide the following information:
+   + A name for the stack
+   + Your default security group and two subnets of that security group\.
 
-## Access an instance<a name="set-up-appstream-ba-access"></a>
+1. Choose **Next**, and then choose **Next** again\.
+
+1. Choose **I acknowledge that AWS CloudFormation might create IAM resources with custom names\.**, and then choose **Create stack**\.
+
+After the fleet is created, repeat these steps with the other downloaded templates to declare the required applications\.
+
+**Note**  
+The downloaded templates expect to find assets in an Amazon S3 bucket with a folder structure named `appstream/bluage/developer-ide/`\. The bucket must be in the same AWS Region as the fleet you created\. You must also edit the `S3Bucket` property in the templates to point to the name of your Amazon S3 bucket\.
+
+## Step 6: Access an instance<a name="set-up-appstream-ba-access"></a>
 
 After you create and start the fleet, you can create a temporary access link for easy access through the native client\.
 

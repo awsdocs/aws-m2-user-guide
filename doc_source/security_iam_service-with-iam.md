@@ -68,7 +68,7 @@ Include actions in a policy to grant permissions to perform the associated opera
 
 
 
-To see a list of AWS Mainframe Modernization actions, see [Actions Defined by AWS Mainframe Modernization ](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awskeymanagementservice.html#awskeymanagementservice-actions-as-permissions) in the *Service Authorization Reference*\.
+To see a list of AWS Mainframe Modernization actions, see [Actions Defined by AWS Mainframe Modernization](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awsmainframemodernizationservice.html#awsmainframemodernizationservice-actions-as-permissions) in the *Service Authorization Reference*\.
 
 Policy actions in AWS Mainframe Modernization use the following prefix before the action:
 
@@ -145,7 +145,7 @@ The following AWS Mainframe Modernization actions do not support resource\-level
             ListTagsForResource
 ```
 
-To see a list of AWS Mainframe Modernization resource types and their ARNs, see [Resources Defined by AWS Mainframe Modernization ](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awskeymanagementservice.html#awskeymanagementservice-resources-for-iam-policies) in the *Service Authorization Reference*\. To learn with which actions you can specify the ARN of each resource, see [Actions Defined by AWS Mainframe Modernization ](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awskeymanagementservice.html#awskeymanagementservice-actions-as-permissions)\.
+To see a list of AWS Mainframe Modernization resource types and their ARNs, see [Resources Defined by AWS Mainframe Modernization](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awsmainframemodernizationservice.html#awsmainframemodernizationservice-resources-for-iam-policies) in the *Service Authorization Reference*\. To learn with which actions you can specify the ARN of each resource, see [Actions Defined by AWS Mainframe Modernization](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awsmainframemodernizationservice.html#awsmainframemodernizationservice-actions-as-permissions)\.
 
 
 
@@ -177,7 +177,7 @@ The following condition keys are specific to AWS Mainframe Modernization
             m2:InstanceType
 ```
 
-To see a list of AWS Mainframe Modernization condition keys, see [Condition Keys for AWS Mainframe Modernization ](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awskeymanagementservice.html#awskeymanagementservice-policy-keys) in the *Service Authorization Reference*\. To learn with which actions and resources you can use a condition key, see [Actions Defined by AWS Mainframe Modernization ](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awskeymanagementservice.html#awskeymanagementservice-actions-as-permissions)\.
+To see a list of AWS Mainframe Modernization condition keys, see [Condition Keys for AWS Mainframe Modernization](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awsmainframemodernizationservice.html#awsmainframemodernizationservice-policy-keys) in the *Service Authorization Reference*\. To learn with which actions and resources you can use a condition key, see [Actions Defined by AWS Mainframe Modernization](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awsmainframemodernizationservice.html#awsmainframemodernizationservice-actions-as-permissions)\.
 
 To view examples of AWS Mainframe Modernization identity\-based policies, see [Identity\-based policy examples for AWS Mainframe Modernization](security_iam_id-based-policy-examples.md)\.
 
