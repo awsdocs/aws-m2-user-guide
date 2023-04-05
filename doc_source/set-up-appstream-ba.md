@@ -1,12 +1,12 @@
-# Tutorial: Set up AppStream 2\.0 for use with Blu Age Developer IDE<a name="set-up-appstream-ba"></a>
+# Tutorial: Set up AppStream 2\.0 for Blu Age Developer IDE<a name="set-up-appstream-ba"></a>
 
 This document describes how to set up Blu Age Developer IDE on an AppStream 2\.0 fleet\.
 
 **Topics**
 + [Prerequisite](#set-up-aas2-ba-prereqs)
 + [Step 1: Create an Amazon S3 bucket](#set-up-aas2-ba-create-bucket)
-+ [Step 2: Attach a policy to the Amazon S3 bucket](#set-up-aas2-ba-create-bucket-policy)
-+ [Step 3: Upload the files to the Amazon S3 bucket](#set-up-aas2-ba-upload)
++ [Step 2: Attach a policy to the S3 bucket](#set-up-aas2-ba-create-bucket-policy)
++ [Step 3: Upload files to the Amazon S3 bucket](#set-up-aas2-ba-upload)
 + [Step 4: Download AWS CloudFormation templates](#set-up-aas2-ba-download-templates)
 + [Step 5: Create the fleet with AWS CloudFormation](#set-up-appstream-ba-cfn)
 + [Step 6: Access an instance](#set-up-appstream-ba-access)
@@ -16,13 +16,16 @@ This document describes how to set up Blu Age Developer IDE on an AppStream 2\.0
 
 Download the [archive file](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/appstream-bluage-developer-ide.zip) that contains the artifacts that you need to set up Blu Age Developer IDE under AppStream 2\.0\.
 
+**Note**  
+This is a large file\. If you have problems with the operation timing out, we recommend using an Amazon EC2 instance to improve the upload and download performance\.
+
 ## Step 1: Create an Amazon S3 bucket<a name="set-up-aas2-ba-create-bucket"></a>
 
-Create an Amazon S3 bucket in the same AWS Region as the fleet you will create\. This bucket will contain the artifacts you need to complete this tutorial\.
+Create an Amazon S3 bucket in the same AWS Region as the AppStream 2\.0 fleet that you will create\. This bucket will contain the artifacts that you need to complete this tutorial\.
 
-## Step 2: Attach a policy to the Amazon S3 bucket<a name="set-up-aas2-ba-create-bucket-policy"></a>
+## Step 2: Attach a policy to the S3 bucket<a name="set-up-aas2-ba-create-bucket-policy"></a>
 
-Attach the following policy to the Amazon S3 bucket you create for this tutorial\. Make sure to replace `MYBUCKET` with the actual name of the bucket you created\.
+Attach the following policy to the bucket that you create for this tutorial\. Make sure to replace `MYBUCKET` with the actual name of the bucket that you create\.
 
 ```
 {
@@ -39,13 +42,13 @@ Attach the following policy to the Amazon S3 bucket you create for this tutorial
 }
 ```
 
-## Step 3: Upload the files to the Amazon S3 bucket<a name="set-up-aas2-ba-upload"></a>
+## Step 3: Upload files to the Amazon S3 bucket<a name="set-up-aas2-ba-upload"></a>
 
-Unzip the files you downloaded in the Prerequisite and upload the `appstream` folder to the Amazon S3 bucket\. Uploading this folder will create the correct structure in your Amazon S3 bucket\.
+Unzip the files you downloaded in the Prerequisite and upload the `appstream` folder to your bucket\. Uploading this folder creates the correct structure in your bucket\. For more information, see [Uploading objects](https://docs.aws.amazon.com/AmazonS3/latest/userguide/upload-objects.html) in the *Amazon S3 User Guide*\.
 
 ## Step 4: Download AWS CloudFormation templates<a name="set-up-aas2-ba-download-templates"></a>
 
-Download the following AWS CloudFormation templates, which are required to create and populate the AppStream 2\.0 fleet\.
+Download the following AWS CloudFormation templates\. You need these templates to create and populate the AppStream 2\.0 fleet\.
 + [cfn\-m2\-appstream\-elastic\-fleet\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-elastic-fleet-linux.yaml)
 + [cfn\-m2\-appstream\-bluage\-dev\-tools\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-bluage-dev-tools-linux.yaml)
 + [cfn\-m2\-appstream\-bluage\-shared\-linux\.yaml](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/CloudFormation/cfn-m2-appstream-bluage-shared-linux.yaml)
@@ -68,37 +71,37 @@ In this step, you use the `cfn-m2-appstream-elastic-fleet-linux.yaml` AWS CloudF
 1. Choose **Choose file**, and navigate to file `cfn-m2-appstream-elastic-fleet-linux.yaml`\. Choose **Next**\.
 
 1. In **Specify stack details**, provide the following information:
-   + A name for the stack
+   + A name for the stack\.
    + Your default security group and two subnets of that security group\.
 
 1. Choose **Next**, and then choose **Next** again\.
 
-1. Choose **I acknowledge that AWS CloudFormation might create IAM resources with custom names\.**, and then choose **Create stack**\.
+1. Choose **I acknowledge that AWS CloudFormation might create IAM resources with custom names\.**, and then choose **Submit**\.
 
-After the fleet is created, repeat these steps with the other downloaded templates to declare the required applications\.
+1. After you create the fleet, create CloudFormation stacks with the other downloaded templates to finish setting up the applications\. Make sure to update **BucketName** each time to point to the correct S3 bucket\. You can edit the **BucketName** in the CloudFormation console\. Alternatively, you can edit the template files directly and update the `S3Bucket` property\.
 
 **Note**  
-The downloaded templates expect to find assets in an Amazon S3 bucket with a folder structure named `appstream/bluage/developer-ide/`\. The bucket must be in the same AWS Region as the fleet you created\. You must also edit the `S3Bucket` property in the templates to point to the name of your Amazon S3 bucket\.
+The downloaded templates expect to find assets in an S3 bucket with a folder structure called `appstream/bluage/developer-ide/`\. The bucket must be in the same AWS Region as the fleet that you created\.
 
 ## Step 6: Access an instance<a name="set-up-appstream-ba-access"></a>
 
-After you create and start the fleet, you can create a temporary access link for easy access through the native client\.
+After you create and start the fleet, you can create a temporary link to access the fleet through the native client\.
 
 1. Navigate to AppStream 2\.0 in the AWS Management Console and choose the previously created stack:  
 ![\[The Stacks page in AppStream 2.0 showing the stack created for AWS Mainframe Modernization.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/aas-ba-stacks.png)
 
-1. In **Stacks**, choose **Action**, then choose **Create Streaming URL**:  
+1. On the stack details page, choose **Action**, then choose **Create Streaming URL**:  
 ![\[The AppStream 2.0 create streaming URL page.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/aas-ba-create-url.png)
 
-1. In **Create Streaming URL**, enter an \(arbitrary\) User ID and an URL expiration time, then choose **Get URL**\. You will be provided with an URL that you can use to stream to a browser or into the native client \(recommended\)\.
+1. In **Create Streaming URL**, enter an arbitrary User ID and a URL expiration time, and then choose **Get URL**\. You get an URL that you can use to stream to a browser or into the native client\. We recommend that you stream into the native client\.
 
 ## Clean up resources<a name="set-up-appstream-ba-clean"></a>
 
-The procedure to clean up the created stack and fleets is described in [Create an AppStream 2\.0 Fleet and Stack](https://docs.aws.amazon.com/appstream2/latest/developerguide/set-up-stacks-fleets.html)\.
+For the procedure to clean up the created stack and fleets, see [Create an AppStream 2\.0 Fleet and Stack](https://docs.aws.amazon.com/appstream2/latest/developerguide/set-up-stacks-fleets.html)\.
 
-When the AppStream 2\.0 objects have been deleted, the account administrator can also, if appropriate, clean up the Amazon S3 buckets for Application Settings and Home Folders\.
+When you've deleted the AppStream 2\.0 objects, you or the account administrator can also clean up the S3 buckets for Application Settings and Home Folders\.
 
 **Note**  
 The home folder for a given user is unique across all fleets, so you might need to retain it if other AppStream 2\.0 stacks are active in the same account\.
 
-Finally, AppStream 2\.0 does not currently allow you to delete users using the console\. Instead, you must use the service API with the CLI\. For more information, see [User Pool Administration](https://docs.aws.amazon.com/appstream2/latest/developerguide/user-pool-admin.html) in the *Amazon AppStream 2\.0 Administration Guide*\.
+You can't use the AppStream 2\.0 console to delete users\. Instead, you must use the service API with the AWS CLI\. For more information, see [User Pool Administration](https://docs.aws.amazon.com/appstream2/latest/developerguide/user-pool-admin.html) in the *Amazon AppStream 2\.0 Administration Guide*\.

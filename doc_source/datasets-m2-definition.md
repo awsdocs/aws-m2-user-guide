@@ -162,7 +162,7 @@ Each data set definition has the same structure\. All of the definitions are gro
 ```
 
 **storageType**  
-Optional\. Specifies whether the data set is stored in a database or a file system\.  
+Optional\. Specifies whether imported data sets are stored in a database or a file system\.  
 + If you are using the Micro Focus runtime engine, you can use either `database` to indicate a datastore or `file system` to indicate either Amazon EFS or Amazon FSx\.
 + If you are using the Blu Age runtime engine, `file system` is not supported\. You must use `database` to indicate Blusam\.
 

@@ -1,6 +1,6 @@
 # Tutorial: Use Blu Age Developer on AppStream 2\.0<a name="tutorial-ba-developer"></a>
 
-This tutorial shows you how to access Blu Age Developer on AppStream 2\.0 and use it with a sample application so you can try out the features\. When you finish this tutorial, you can try using the same steps with your own applications\.
+This tutorial shows you how to access Blu Age Developer on AppStream 2\.0 and use it with a sample application so you can try out the features\. When you finish this tutorial, you can use the same steps with your own applications\.
 
 **Topics**
 + [Step 1: Create a database](#tutorial-ba-developer-create-db)
@@ -23,37 +23,37 @@ In this step, you use Amazon RDS to create a managed PostgreSQL database that th
 
 1. Choose **Databases > Create database**\.
 
-1. Choose **Standard create > PostgreSQL**, leave default version, and choose **Free tier**\.
+1. Choose **Standard create > PostgreSQL**, leave the default version, and then choose **Free tier**\.
 
 1. Choose a DB instance identifier and a master password \(or auto generate one\)\.
 
-1. Ensure the VPC is the same as the AppStream 2\.0 instance one \(ask your administrator\)\.
+1. Ensure that the VPC is the same as the one that you use for the AppStream 2\.0 instance\. You can ask your admin for this value\.
 
 1. For **VPC security group**, choose **Create New**\.
 
 1. Leave **Public access** set to **No**\.
 
-1. Leave \(and review\) all other default values\.
+1. Leave all other default values\. Review these values\.
 
 1. Choose **Create database**\.
 
-After the database server is created, choose **View connection details** and take note of the master password and endpoint\.
+After you create the database server, choose **View connection details**\. Note the master password and endpoint\.
 
-Then, to make the database server accessible from your instance, select the database server in Amazon RDS, and, under **Connectivity & security**, choose its VPC security group \(which was previously created for you, and should have a description similar to **Created by RDS management console**\)\. Choose **Action > Edit inbound rules**, **Add rule**, and create a rule of type **PostgreSQL**\. For its source, use the security group **default** \(start typing it in the **Source** field, and accept the suggested ID\)\. Finally, choose **Save rules**\. 
+To make the database server accessible from your instance, select the database server in Amazon RDS\. Under **Connectivity & security**, choose the VPC security group for the database server\. This security group was previously created for you and should have a description similar to the one in **Created by RDS management console**\. Choose **Action > Edit inbound rules**, choose **Add rule**, and create a rule of type **PostgreSQL**\. For rule source, use the security group **default**You can start to type the source name in the **Source** field and then accept the suggested ID\. Finally, choose **Save rules**\. 
 
 ## Step 2: Access the environment<a name="tutorial-ba-developer-access-env"></a>
 
 In this step, you access the Blu Age development environment on AppStream 2\.0\.
 
-1. Reach out to your administrator for the proper way to access your AppStream 2\.0 instance\. For general information about possible clients and configuration, see [AppStream 2\.0 Access Methods and Clients](https://docs.aws.amazon.com/appstream2/latest/developerguide/clients-access-methods-user.html) in the *Amazon AppStream 2\.0 Administration Guide*\. Consider using the native client for the best experience\.
+1. Contact your administrator for the proper way to access your AppStream 2\.0 instance\. For general information about possible clients and configurations, see [AppStream 2\.0 Access Methods and Clients](https://docs.aws.amazon.com/appstream2/latest/developerguide/clients-access-methods-user.html) in the *Amazon AppStream 2\.0 Administration Guide*\. Consider using the native client for the best experience\.
 
-1. In AppStream 2\.0 choose **Desktop View**\.
+1. In AppStream 2\.0 choose **Desktop**\.
 
 ## Step 3: Set up the runtime<a name="tutorial-ba-developer-set-up-runtime"></a>
 
 In this step, you set up the Blu Age runtime\. You must set up the runtime at first launch and again if you are notified of a runtime upgrade\. This step populates your `.m2` folder\.
 
-1. In **Applications**, choose **Terminal**\.
+1. Choose **Applications**, from the menu bar, and then choose **Terminal**\.
 
 1. Enter the following command:
 
@@ -65,11 +65,11 @@ In this step, you set up the Blu Age runtime\. You must set up the runtime at fi
 
 In this step, you start the Eclipse IDE and choose a location where you want to create a workspace\. 
 
-1. In AppStream 2\.0 choose the Launch Application icon on the toolbar, then choose **Eclipse JEE**\.  
-![\[The Launch Application icon on the toolbar in AppStream 2.0. Eclipse JEE is selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/aas-ba-eclipse.png)
+1. In AppStream 2\.0 choose the Launch Application icon on the toolbar, and then choose **Eclipse JEE**\.  
+![\[Launch Application icon on the toolbar in AppStream 2.0. Eclipse JEE is selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/aas-ba-eclipse.png)
 
 1. When the launcher opens, enter the location where you want to create your workspace, and choose **Launch**\.  
-![\[The Blu Age Eclipse IDE launcher in AppStream 2.0. Workspace is selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-launcher.png)
+![\[Blu Age Eclipse IDE launcher in AppStream 2.0. Workspace is selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-launcher.png)
 
 Optionally, you can launch Eclipse from the command line, as follows:
 
@@ -81,7 +81,7 @@ Optionally, you can launch Eclipse from the command line, as follows:
 
 In this step, you import a Maven project for the Planets demo application\.
 
-1. Upload [PlanetsDemo\-pom\.zip](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/PlanetsDemo/PlanetsDemo-pom.zip) to your Home folder \(you can use the native client “My Files” feature for this\)\.
+1. Upload [PlanetsDemo\-pom\.zip](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/PlanetsDemo/PlanetsDemo-pom.zip) to your Home folder\. You can use the native client “My Files” feature to do this\.
 
 1. Use the `unzip` command line tool to extract the files\.
 
@@ -95,131 +95,129 @@ In this step, you import a Maven project for the Planets demo application\.
       cat ~/runtime-version.txt
    ```
 
-   This command will print the currently available runtime version; for example, `3.1.0-b3257-dev`\.
+   This command prints the currently available runtime version, for example, `3.1.0-b3257-dev`\.
 **Note**  
-Do not include the `-dev` suffix in `gapwalk.version`, so for example a valid value would be `<gapwalk.version>3.1.0-b3257</gapwalk.version>`\.
+Don't include the `-dev` suffix in `gapwalk.version`\. For example, a valid value would be `<gapwalk.version>3.1.0-b3257</gapwalk.version>`\.
 
-1. In Eclipse, choose **File**, then **Import**\. In **Import**, expand **Maven** and choose **Existing Maven Projects** and choose **Next**\. 
+1. In Eclipse, choose **File**, then **Import**\. In the **Import**, dialog window, expand **Maven** and choose **Existing Maven Projects**\. Choose **Next**\. 
 
 1. In **Import Maven Projects**, provide the location of the extracted files and choose **Finish**\.
 
-   Eclipse will immediately start downloading required Maven dependencies and building the project\.
-
-   You can safely ignore the following popup, because Maven will download a local copy of node\.js to build the Angular \(\*\-web\) part of the project:  
+   You can safely ignore the following popup\. Maven downloads a local copy of `node.js` to build the Angular \(\*\-web\) part of the project:  
 ![\[Warning message about missing node.js.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-node-warning.png)
 
-   Wait until the end of the build, which you can follow in the **Progress** View\.
+   Wait until the end of the build\. You can follow the build in the **Progress** View\.
 
-1. In Eclipse, right\-click the project and choose **Run as**, and then choose **Maven install**\. The `war` file is created under `PlanetsDemoPom/PlanetsDemo-web/target/PlanetsDemo-web-1.0.0.war` after the Maven installation succeeds\.
+1. In Eclipse, select the project and choose **Run as**\. Then choose **Maven install**\. After the Maven installation succeeds, it creates the `war` file under `PlanetsDemoPom/PlanetsDemo-web/target/PlanetsDemo-web-1.0.0.war`\.
 
 ## Step 6: Configure a Tomcat server<a name="tutorial-ba-developer-config-tomcat"></a>
 
-In this step, you configure a Tomcat server where you will deploy and start your compiled application\.
+In this step, you configure a Tomcat server where you deploy and start your compiled application\.
 
-1. In Eclipse, choose **Window > Show View > Servers** to get the focus on the **Servers** view:  
+1. In Eclipse, choose **Window > Show View > Servers** to show the **Servers** view:  
 ![\[Blu Age Eclipse with Servers view selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-servers.png)
 
-1. Choose **No servers are available\. Click this link to create a new server\.\.\.**\. The **New Server** Wizard pops up\. There, enter **tomcat v9** in the **Select the server type** field, and choose **Tomcat v9\.0 Server**:  
+1. Choose **No servers are available\. Click this link to create a new server\.\.\.**\. The **New Server**wizard appears\. In the **Select the server type** field of the wizard, enter **tomcat v9** , and choose **Tomcat v9\.0 Server**\. Then choose **Next**\.  
 ![\[The New Server dialog box. Tomcat v9.0 Server is selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-new-server.png)
 
-1. Choose **Next**, then **Browse** and choose the **tomcat** folder at the root of the Home folder\. Leave the JRE at its default value and choose **Finish**\.
+1. Choose **Browse**, and choose the **tomcat** folder at the root of the Home folder\. Leave the JRE at its default value and choose **Finish**\.
 
    A **Servers** project is created in the workspace, and a Tomcat v9\.0 server is now available in the **Servers** view\. This is where the compiled application will be deployed and started:  
 ![\[Blu Age Eclipse Servers tab with new Tomcat server listed.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-server-added.png)
 
 ## Step 7: Deploy to Tomcat<a name="tutorial-ba-developer-deploy-tomcat"></a>
 
-In this step, you deploy the Planets demo application to the Tomcat server so you can run it\.
+In this step, you deploy the Planets demo application to the Tomcat server so you can run the application\.
 
-1. Right click `PlanetsDemo-web` and choose **Run As > Maven install**\. Then right click `PlanetsDemo-web` again and choose **Refresh** to ensure that the npm\-compiled frontend is properly compiled to a \.war and noticed by Eclipse\.
+1. Select the `PlanetsDemo-web` file and choose **Run As > Maven install**\. Select `PlanetsDemo-web` again and choose **Refresh** to ensure that the npm\-compiled frontend is properly compiled to a \.war and noticed by Eclipse\.
 
-1. Upload the [PlanetsDemo\-runtime\.zip](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/PlanetsDemo/PlanetsDemo-runtime.zip) to the instance, and unzip it at an accessible location\. This provides some configuration folders and files needed for the demo application to run\.
+1. Upload the [PlanetsDemo\-runtime\.zip](https://d3lkpej5ajcpac.cloudfront.net/appstream/bluage/developer-ide/PlanetsDemo/PlanetsDemo-runtime.zip) to the instance, and unzip the file at an accessible location\. This ensures that the demo application can access the configuration folders and files that it requires\. 
 
-1. Copy the contents of `PlanetsDemo-runtime/tomcat-config` into the `Servers/Tomcat v9.0...` subfolder created for your Tomcat server:  
-![\[Blu Age Eclipse Tomcat v9.0 subfolder and the files it contains.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-tomcat-subfolder.png)
+1. Copy the contents of `PlanetsDemo-runtime/tomcat-config` into the `Servers/Tomcat v9.0...` subfolder that you created for your Tomcat server:  
+![\[Blu Age Eclipse Tomcat v9.0 subfolder and the files that it contains.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-tomcat-subfolder.png)
 
-1. Double\-click the `tomcat v9.0` server entry in the Servers view\. The server properties editor appears:  
+1. Open the `tomcat v9.0` server entry in the Servers view\. The server properties editor appears:  
 ![\[The server properties editor. The Overview tab is selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-server-properties-editor.png)
 
-1. In the **Overview** tab, increase the **Timeouts** values to 450 seconds for Start and 150 seconds for Stop, as shown:  
+1. In the **Overview** tab, increase the **Timeouts** values to 450 seconds for Start, and 150 seconds for Stop, as shown here:  
 ![\[Start timeout value set to 450 seconds. Stop timeout value set to 150 seconds.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-timeout-values.png)
 
-1. Choose **Open launch configuration**\. In the resulting wizard, navigate to the **Arguments** folder and, for **Working directory**, choose **Other**, **File System**, and navigate to the `PlanetsDemo-runtime` folder unzipped earlier \(one of its direct subfolders should be **config**\):  
+1. Choose **Open launch configuration**\. A wizard appears\. In the wizard, navigate to the **Arguments** folder and, for **Working directory**, choose **Other**\. Choose **File System**, and navigate to the `PlanetsDemo-runtime` folder unzipped earlier\. This folder should contain a direct subfolder called **config**\.  
 ![\[The Edit Configurations dialog box with the working directory specified in the Other field.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-edit-configuration.png)
 
 1. Choose the **Modules** tab of the server properties editor and make the following changes:
    + Choose **Add Web Module** and add `PlanetsDemo-service`\.
-   + Choose **Add External Web Module** and make the following changes:
-     + for **Document base**, enter the path to `~/webapps/gapwalk-application...war`
-     + for **Path**, enter `/gapwalk-application`
-     + choose OK\.
+   + Choose **Add External Web Module**\. The **Add Web Module** dialog window appears\. Make the following changes:
+     + In **Document base**, choose **Browse** and navigate to `~/webapps/gapwalk-application...war`
+     + In **Path**, enter `/gapwalk-application`\.
+   + Choose OK\.
    + Choose **Add External Web Module** again and make the following changes:
-     + for **Document base**, enter the path to the frontend \.war \(in `PlanetsDemo-web/target`\)
-     + for **Path**, enter `/demo`
-     + choose OK
+     + For **Document base**, enter the path to the frontend \.war \(in `PlanetsDemo-web/target`\)
+     + For **Path**, enter `/demo`
+   + Choose OK
    + Save the editor modifications \(Ctrl \+ S\)\.
 
-The editor content should now be similar to the following:
+The editor content should now be similar to the following\.
 
-![\[The Tomcat server properties Web Modules tab with the modules listed.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-web-modules.png)
+![\[The Web Modules tab for the Tomcat server properties with the modules listed.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-web-modules.png)
 
 ## Step 8: Create the JICS database<a name="tutorial-ba-developer-create-jics"></a>
 
-In this step, you connect to the database you created in [Step 1: Create a database](#tutorial-ba-developer-create-db)\.
+In this step, you connect to the database that you created in [Step 1: Create a database](#tutorial-ba-developer-create-db)\.
 
-1. From the AppStream 2\.0 instance, launch `pgAdmin` by issuing the following command in a terminal:
+1. From the AppStream 2\.0 instance, issue the following command in a terminal to launch `pgAdmin`:
 
    ```
          ./pgadmin-start.sh
    ```
 
-1. In that same terminal, choose a login \(email address\) and password, then take note of the provided url \(typically http://127\.0\.0\.1:5050 \)\. Launch Google Chrome in the instance, then copy and paste this URL there and login using the identifiers you chose beforehand:  
+1. Choose an email address and password as login identifiers\. Take note of the provided URL \(typically http://127\.0\.0\.1:5050 \)\. Launch Google Chrome in the instance, copy and paste the URL into the browser, and log in with your identifiers\.  
 ![\[The pgAdmin login dialog box.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-pgadmin-login.png)
 
-1. When you are logged in, choose **Add New Server** and enter the connection information to the previously created database:  
+1. After you log in, choose **Add New Server** and enter the connection information to the previously created database as follows\.  
 ![\[The pgAdmin Register Server dialog box. The Connection tab is selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-pgadmin-register-server.png)
 
-1. When you are connected to the database server, use **Object > Create > Database** and create a new database named **jics**\.
+1. When you connect to the database server, use **Object > Create > Database** and create a new database named **jics**\.
 
-   Finally, edit database connection information used by the demo app\. Those are defined in `PlanetsDemo-runtime/config/application-main.yml`\. Search for the `jicsDs` entry, and edit its properties to match your database information\.
+1. Edit the database connection information that the demo app used\. This information is defined in `PlanetsDemo-runtime/config/application-main.yml`\. Search for the `jicsDs` entry\. Change the values for `username` and `password` to the values that you set when you created the database in [Step 1: Create a database](#tutorial-ba-developer-create-db)\.
 
 ## Step 9: Start and test the application<a name="tutorial-ba-developer-test-app"></a>
 
-In this step, you start the Tomcat server and the demo application so you can test it\.
+In this step, you start the Tomcat server and the demo application so that you can test it\.
 
-1. To start the Tomcat server and the previously deployed applications, right click its entry in the Servers view and choose **Start**\. A console will appear in which the startup logs are displayed\.
+1. To start the Tomcat server and the previously deployed applications, select the server entry in the Servers view and choose **Start**\. A console appears that displays startup logs\.
 
-1. After the server starts \(you can check its status in the **Servers** view, or wait for the **Server startup in \[xxx\] milliseconds** message in the console\), check that gapwalk\-application is properly deployed by accessing the **http://localhost:8080/gapwalk\-application** URL in a Google Chrome browser\. You should get the following answer:  
+1. Check the server status in the **Servers** view, or wait for the **Server startup in \[xxx\] milliseconds** message in the console\. After the server starts, check that gapwalk\-application is properly deployed\. To do this, access the **http://localhost:8080/gapwalk\-application** URL in a Google Chrome browser\. You should see the following\.  
 ![\[Confirmation message showing that the jics application is running.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-jics-run-confirm.png)
 
-1. Then access the deployed application frontend from Google Chrome using the following URL: http://localhost:8080/demo\. The following **Transaction Launcher** page should be displayed:  
+1. Access the deployed application frontend from Google Chrome at http://localhost:8080/demo\. The following **Transaction Launcher** page should appear\.  
 ![\[The JICS transaction launcher page.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-jics-launcher.png)
 
-1. Enter `PINQ` in the input field and choose **Run** \(or press Enter\) to start the application transaction\.
+1. To start the application transaction, enter `PINQ` in the input field, and choose **Run** \(or press Enter\)\.
 
-   The demo app screen should then be displayed:  
+   The demo app screen should appear\.  
 ![\[The PlanetsDemo application screen in insert mode.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-demo-app-screen.png)
 
-1. Type a planet name in the corresponding field and press Enter:  
+1. Type a planet name in the corresponding field and press Enter\.  
 ![\[The PlanetsDemo application screen with Earth entered in the Planet name field.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-demo-with-data.png)
 
 ## Step 10: Debug the application<a name="tutorial-ba-developer-debug"></a>
 
-In this step, you test using the standard Eclipse debugging features, which are available when working on a modernized application\.
+In this step, you test using the standard Eclipse debugging features\. These features are available when you work on a modernized application\.
 
-1. Open the main service class by pressing Ctrl \+ Shift \+ T and entering `PlanetsinqProcessImpl`:  
-![\[The Eclipse Open Type dialog box with PlanetsinqProcessImpl entered.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-open-type.png)
+1. To open the main service class, press Ctrl \+ Shift \+ T\. Then enter `PlanetsinqProcessImpl`\.  
+![\[The Eclipse Open Type dialog window with PlanetsinqProcessImpl entered.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/ba-eclipse-open-type.png)
 
 1. Navigate to the `searchPlanet` method, and put a breakpoint there\.
 
-1. Restart the server: Right click > Restart in Debug\.
+1. Select the server name and select **Restart in Debug**\.
 
-1. Repeat the previous scenario \(access the application, input a planet name and press Enter\)\.
+1. Repeat the previous steps\. That is, access the application, input a planet name, and press Enter\.
 
-   Eclipse will halt in the `searchPlanet` method; now you can examine it\.
+   Eclipse will stop the application in the `searchPlanet` method\. Now you can examine it\.
 
 ## Clean up resources<a name="tutorial-ba-developer-clean"></a>
 
-If you no longer need the resources you created for this tutorial, delete them so that you won't continue to be charged for them\. Complete the following steps:
+If you no longer need the resources that you created for this tutorial, delete them so that you don't incur additional charges\. Complete the following steps:
 + If the Planets application is still running, stop it\.
-+ Delete the database you created in [Step 1: Create a database](#tutorial-ba-developer-create-db)\. For more information, see [Deleting a DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_DeleteInstance.html)\.
++ Delete the database that you created in [Step 1: Create a database](#tutorial-ba-developer-create-db)\. For more information, see [Deleting a DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_DeleteInstance.html)\.

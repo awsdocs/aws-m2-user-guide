@@ -3,8 +3,8 @@
 You can automatically run a script at session start and end to allow automation that is specific to your customer context\. For more information on this AppStream 2\.0 feature, see [Use Session Scripts to Manage Your AppStream 2\.0 Users' Streaming Experience](https://docs.aws.amazon.com/appstream2/latest/developerguide/use-session-scripts.html) in the *Amazon AppStream 2\.0 Administration Guide*\.
 
 This feature requires that you have at least the following versions of the Enterprise Analyzer and Enterprise Developer images:
-+ `m2-enterprise-analyzer-v7.0.4.R1`
-+ `m2-enterprise-developer-v7.0.7.R1`
++ `m2-enterprise-analyzer-v8.0.4.R1`
++ `m2-enterprise-developer-v8.0.4.R1`
 
 **Topics**
 + [Set up automation at session start](#set-up-automation-m2.start)

@@ -86,7 +86,7 @@ To launch this stack you need permissions to administer IAM, Amazon S3, Lambda, 
 1. On the **Specify template** page:
    + In **Prepare template**, choose **Template is ready**\.
    + In **Specify template**, choose **Amazon S3 URL** as the template source and enter one of the following URLs depending on your AWS Region\.
-     + `https://m2-us-east-1.s3.amazonaws.com/cicd/mf/basic-infra.yaml`
+     + `https://m2-us-east-1.s3.us-east-1.amazonaws.com/cicd/mf/basic-infra.yaml`
      + `https://m2-eu-central-1.s3.eu-central-1.amazonaws.com/cicd/mf/basic-infra.yaml`
    + To accept your settings, choose **Next**\.
 
@@ -336,7 +336,7 @@ Make sure you choose the same location after reconnecting to the AppStream 2\.0 
    + In **Location URI**, enter the HTTPS URL of the CodeCommit repository\.
 **Note**  
 Copy the Clone URL HTTPS for the CodeCommit repository in the AWS Management Console and paste it here\. The URI will be split into the **Host** and **Repository** paths\.\. 
-   + The IAM user CodeCommit repository credentials in **Authentication User** and **Password** and choose **Store** in **Secure Store**\.
+   + The user CodeCommit repository credentials in **Authentication User** and **Password** and choose **Store** in **Secure Store**\.
 
 1. In **Branch Selection**, choose **Main** branch, then choose **Next**\.
 

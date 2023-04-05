@@ -29,7 +29,7 @@ If you enable private DNS for the interface endpoint, you can make API requests 
 An endpoint policy is an IAM resource that you can attach to an interface endpoint\. The default endpoint policy allows full access to Mainframe Modernization through the interface endpoint\. To control the access allowed to Mainframe Modernization from your VPC, attach a custom endpoint policy to the interface endpoint\.
 
 An endpoint policy specifies the following information:
-+ The principals that can perform actions \(AWS accounts, IAM users, and IAM roles\)\.
++ The principals that can perform actions \(AWS accounts, users, and IAM roles\)\.
 + The actions that can be performed\.
 + The resources on which the actions can be performed\.
 

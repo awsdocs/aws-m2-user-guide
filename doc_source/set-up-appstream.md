@@ -3,7 +3,7 @@
 This document is intended for members of the customer operations team\. It describes how to set up Amazon AppStream 2\.0 fleets and stacks to host the Micro Focus Enterprise Analyzer and Micro Focus Enterprise Developer tools used with AWS Mainframe Modernization\. Micro Focus Enterprise Analyzer is usually used during the Assess phase and Micro Focus Enterprise Developer is usually used during the Migrate and Modernize phase of the AWS Mainframe Modernization approach\. If you plan to use both Enterprise Analyzer and Enterprise Developer you must create separate fleets and stacks for each tool\. Each tool requires its own fleet and stack because their licensing terms are different\.
 
 **Important**  
-The steps in this tutorial are based on the downloadable AWS CloudFormation template [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\.  
+The steps in this tutorial are based on the downloadable AWS CloudFormation template [cfn\-m2\-appstream\-fleet\-ea\-ed\.yml](https://drm0z31ua8gi7.cloudfront.net/tutorials/mf/appstream/cfn-m2-appstream-fleet-ea-ed.yml)\.  
 
 **Topics**
 + [Prerequisites](#tutorial-aas-prerequisites)
@@ -16,9 +16,9 @@ The steps in this tutorial are based on the downloadable AWS CloudFormation temp
 + [Clean up resources](#tutorial-aas-cleanup)
 
 ## Prerequisites<a name="tutorial-aas-prerequisites"></a>
-+ Download the template: [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml)\.
++ Download the template: [cfn\-m2\-appstream\-fleet\-ea\-ed\.yml](https://drm0z31ua8gi7.cloudfront.net/tutorials/mf/appstream/cfn-m2-appstream-fleet-ea-ed.yml)\.
 + Get the ID of your default VPC and security group\. For more information on the default VPC, see [Default VPCs](https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html) in the *Amazon VPC User Guide*\. For more information on the default security group, see [Default and custom security groups](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/default-custom-security-groups.html) in the *Amazon EC2 User Guide for Linux Instances*\. 
-+ Make sure your IAM user has the following permissions:
++ Make sure you have the following permissions:
   + create stacks, fleets, and users in AppStream 2\.0\.
   + create stacks in AWS CloudFormation using a template\.
   + create buckets and upload files to buckets in Amazon S3\.
@@ -42,25 +42,25 @@ In this step, you use the downloaded AWS CloudFormation template to create an Ap
 **Note**  
 AWS Mainframe Modernization adds an additional fee to the standard AppStream 2\.0 pricing for the use of Enterprise Analyzer and Enterprise Developer\. For more information, see [AWS Mainframe Modernization Pricing](http://aws.amazon.com/mainframe-modernization/pricing/)\.
 
-1. Download the [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml) template, if necessary\.
+1. Download the [cfn\-m2\-appstream\-fleet\-ea\-ed\.yml](https://drm0z31ua8gi7.cloudfront.net/tutorials/mf/appstream/cfn-m2-appstream-fleet-ea-ed.yml) template, if necessary\.
 
-1. Open the AWS CloudFormation console and choose **Create Stack**\.
+1. Open the AWS CloudFormation console and choose **Create Stack** and **with new resources \(standard\)**\.
 
 1. In **Prerequisite \- Prepare template**, choose **Template is ready**\.
 
 1. In **Specify Template**, choose **Upload a template file**\.
 
-1. In **Upload a template file**, choose **Choose file** and upload the [cfn\-m2\-appstream\-fleet\-ea\-ed\.yaml](https://d1vi4vxke6c2hu.cloudfront.net/tutorial/cfn-m2-appstream-fleet-ea-ed.yaml) template\.
+1. In **Upload a template file**, choose **Choose file** and upload the [cfn\-m2\-appstream\-fleet\-ea\-ed\.yml](https://drm0z31ua8gi7.cloudfront.net/tutorials/mf/appstream/cfn-m2-appstream-fleet-ea-ed.yml) template\.
 
 1. Choose **Next**\.  
-![\[The AWS CloudFormation create stack page showing the cfn-m2-appstream-fleet-ea-ed.yaml template selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/cfn-create-stack.png)
+![\[The AWS CloudFormation create stack page showing the cfn-m2-appstream-fleet-ea-ed.yml template selected.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/cfn-create-stack.png)
 
 1. On **Specify stack details**, enter the following information:
    + In **Stack name**, enter a name of your choice\. For example, **m2\-ea**\.
    + In **AppStreamApplication**, choose **ea**\.
    + In **AppStreamFleetSecurityGroup**, choose your default VPC’s default security group\.
    + In **AppStreamFleetVpcSubnet**, choose a subnet within your default VPC\.
-   + In **AppStreamImageName**, choose the image starting with `m2-enterprise-analyzer`\.
+   + In **AppStreamImageName**, choose the image starting with `m2-enterprise-analyzer`\. This image contains the currently supported version of the Micro Focus Enterprise Analyzer tool\.
    + Accept the defaults for the other fields, then choose **Next**\.  
 ![\[The AWS CloudFormation specify stack details page with Enterprise Analyzer options filled in.\]](http://docs.aws.amazon.com/m2/latest/userguide/images/cfn-specify-stack-details.png)
 
@@ -74,7 +74,7 @@ It takes between 20 and 30 minutes for the stack and fleet to be created\. You c
 
 ## Step 3: Create a user in AppStream 2\.0<a name="tutorial-aas-step3"></a>
 
-While you are waiting for AWS CloudFormation to finish creating the stack, you can create one or more users in AppStream 2\.0\. These users are those who will be using Enterprise Analyzer in AppStream 2\.0\. You will need to specify an email address for each user, and each user needs to correspond to an IAM user with sufficient permissions to create buckets in Amazon S3, upload files to a bucket, and link to a bucket to map its contents\.
+While you are waiting for AWS CloudFormation to finish creating the stack, you can create one or more users in AppStream 2\.0\. These users are those who will be using Enterprise Analyzer in AppStream 2\.0\. You will need to specify an email address for each user, and ensure that each user has sufficient permissions to create buckets in Amazon S3, upload files to a bucket, and link to a bucket to map its contents\.
 
 1. Open the AppStream 2\.0 console\.
 

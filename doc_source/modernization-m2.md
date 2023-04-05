@@ -26,7 +26,7 @@ In the Mobilize phase, you start your project with a kickoff, and then run throu
 
 The Migrate and Modernize phase applies to each application and consists of several tasks, including assigning people, running in\-depth discovery, figuring out the right application architecture on AWS, setting up application runtime environments, replatforming or refactoring your code, integrating with other systems, and, of course, testing\. At the end of the phase, you deploy the replatformed or refactored applications to production and cut over to the new system on AWS\. Most or all of these tasks are conducted in AWS Mainframe Modernization, in another AWS service, or in a tool to which AWS Mainframe Modernization provides access\.
 
-If you want to use automated refactoring, see [BluInsights](https://bluinsights.io/)\.
+If you want to use automated refactoring, see [Blu Insights](https://bluinsights.aws/)\. AWS Blu Insights is now available from the AWS Management Console through single sign\-on\. You do not have to manage separate AWS Blu Insights credentials any longer\. You can access both the AWS Blu Age Codebase and Transformation Center features directly from the AWS Management Console\.
 
 For migrating data from the mainframe to AWS, we recommend the AWS SCT and the AWS Database Migration Service\. For more information, see [What is the AWS Schema Conversion Tool?](https://docs.aws.amazon.com/SchemaConversionTool/latest/userguide/CHAP_Welcome.html) in the *AWS Schema Conversion Tool User Guide* and [What is AWS Database Migration Service?](https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html) in the *AWS Database Migration Service User Guide*\.
 

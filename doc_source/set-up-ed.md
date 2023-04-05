@@ -19,7 +19,7 @@ Third\-party tools
 + [git\-scm](https://git-scm.com/)
 + [PostgreSQL ODBC driver](https://odbc.postgresql.org/)
 
-Libraries in `C:\Public`
+Libraries in `C:\Users\Public`
 + BankDemo source code and project definition for Enterprise Developer: `m2-bankdemo-template.zip`\.
 + MFA install package for the mainframe: `mfa.zip`\. For more information, see [Mainframe Access Overview](https://www.microfocus.com/documentation/enterprise-developer/30pu12/ED-VS2012/BKMMMMINTRS001.html) in the *Micro Focus Enterprise Developer *documentation\.
 + Command and config files for Rclone \(instructions for their use in the tutorials\): `m2-rclone.cmd` and `m2-rclone.conf`\.
@@ -37,7 +37,7 @@ If you need to access source code that is not yet loaded into CodeCommit reposit
 
 ## Prerequisites<a name="tutorial-ed-prerequisites"></a>
 + One or more CodeCommit repositories loaded with the source code of the application to be maintained\. The repository setup should match the requirements of the CI/CD pipeline above to create synergies by combination of both tools\.
-+ IAM users with credentials to the CodeCommit repository or repositories defined by the account administrator for each application teammate according to the information in [Authentication and access control for AWS CodeCommit](https://docs.aws.amazon.com/codecommit/latest/userguide/auth-and-access-control.html)\. The structure of those credentials is reviewed in [Authentication and access control for AWS CodeCommit](https://docs.aws.amazon.com/codecommit/latest/userguide/auth-and-access-control.html) and the complete reference for IAM authorizations for CodeCommit is in the [CodeCommit permissions reference](https://docs.aws.amazon.com/codecommit/latest/userguide/auth-and-access-control-permissions-reference.html): the administrator may define distinct IAM policies for distinct roles having credentials specific to the role for each repository and limiting its authorizations of the user to the specific set of tasks that he has to to accomplish on a given repository\. So, for each maintainer of the CodeCommit repository, the account administrator will generate a primary IAM user, grant this user permissions to access the required repository or repositories via selection proper IAM policy or policies for CodeCommit access\.
++ Each user must have credentials to the CodeCommit repository or repositories defined by the account administrator according to the information in [Authentication and access control for AWS CodeCommit](https://docs.aws.amazon.com/codecommit/latest/userguide/auth-and-access-control.html)\. The structure of those credentials is reviewed in [Authentication and access control for AWS CodeCommit](https://docs.aws.amazon.com/codecommit/latest/userguide/auth-and-access-control.html) and the complete reference for IAM authorizations for CodeCommit is in the [CodeCommit permissions reference](https://docs.aws.amazon.com/codecommit/latest/userguide/auth-and-access-control-permissions-reference.html): the administrator may define distinct IAM policies for distinct roles having credentials specific to the role for each repository and limiting its authorizations of the user to the specific set of tasks that he has to to accomplish on a given repository\. So, for each maintainer of the CodeCommit repository, the account administrator will generate a primary user and grant this user permissions to access the required repository or repositories via selecting the proper IAM policy or policies for CodeCommit access\.
 
 ## Step 1: Setup by individual Enterprise Developer users<a name="tutorial-ed-step1"></a>
 
@@ -47,7 +47,7 @@ If you need to access source code that is not yet loaded into CodeCommit reposit
 
    1. Follow the procedure described in step 3 of [Setup for HTTPS users using Git credentials](https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-gc.html) in the *AWS CodeCommit User Guide*\. 
 
-   1. Copy the CodeCommit\-specific user name and password that IAM generated for you, either by showing, copying, and then pasting this information into a secure file on your local computer, or by choosing **Download credentials** to download this information as a \.CSV file\. You need this information to connect to CodeCommit\.
+   1. Copy the CodeCommit\-specific sign\-in credentials that IAM generated for you, either by showing, copying, and then pasting this information into a secure file on your local computer, or by choosing **Download credentials** to download this information as a \.CSV file\. You need this information to connect to CodeCommit\.
 
 1. Start a session with AppStream 2\.0 based on the url received in the welcome email\. Use your email as user name and create your password\.
 
@@ -99,7 +99,7 @@ To add new files to the set that you are working on or to update existing ones, 
 
 1. Complete the workspace creation required by Enterprise Developer in your Home folder by choosing `C:\Users\PhotonUser\My Files\Home Folder` \(aka `D: \PhotonUser\My Files\Home Folder`\) as location for the workspace\.
 
-1. In Enterprise Developer, clone your CodeCommit repository by going to the Project Explorer, right click and choose **Import**, **Import …**, **Git**, **Projects** from **Git** **Clone URI**\. Then, enter your CodeCommit\-specific user name and password and complete the Eclipse dialog to import the code\.
+1. In Enterprise Developer, clone your CodeCommit repository by going to the Project Explorer, right click and choose **Import**, **Import …**, **Git**, **Projects** from **Git** **Clone URI**\. Then, enter your CodeCommit\-specific sign\-in credentials and complete the Eclipse dialog to import the code\.
 
 The CodeCommit git repository in now cloned in your local workspace\.
 
@@ -126,5 +126,4 @@ As you select a folder that is under AppStream 2\.0 management like the home fol
 
 If you no longer need the resources you created for this tutorial, delete them so that you won't continue to be charged for them\. Complete the following steps:
 + Delete the CodeCommit reponsitory you created for this tutorial\. For more information, see [Delete an CodeCommit repository](https://docs.aws.amazon.com/codecommit/latest/userguide/how-to-delete-repository.html) in the *AWS CodeCommit User Guide*\.
-+ Delete the IAM users you set up for this tutorial\. For more information, see [Deleting an IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_manage.html#id_users_deleting) in the *IAM User Guide*\.
 + Delete the database you created for this tutorial\. For more information, see [Deleting a DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.PostgreSQL.html#CHAP_GettingStarted.Deleting.PostgreSQL)\.

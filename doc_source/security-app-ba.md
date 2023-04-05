@@ -290,7 +290,7 @@ After both the AWS Mainframe Modernization environment and application are creat
 
 If you no longer need the resources you created for this tutorial, delete them so that you won't continue to be charged for them\. Complete the following steps:
 + If the AWS Mainframe Modernization application is still running, stop it\.
-+ Delete the AWS Mainframe Modernization application\. For more information, see [Delete a AWS Mainframe Modernization application](applications-m2-delete.md)\.
-+ Delete the AWS Mainframe Modernization runtime environment\. For more information, see [Delete a AWS Mainframe Modernization runtime environmentDelete a runtime environment](delete-environments-m2.md)\.
++ Delete the AWS Mainframe Modernization application\. For more information, see [Delete an AWS Mainframe Modernization application](applications-m2-delete.md)\.
++ Delete the AWS Mainframe Modernization runtime environment\. For more information, see [Delete an AWS Mainframe Modernization runtime environmentDelete a runtime environment](delete-environments-m2.md)\.
 + Delete the Amazon Cognito resources you created\. For more information, see [Tutorial: Cleaning up your AWS resources](https://docs.aws.amazon.com/cognito/latest/developerguide/tutorial-cleanup-tutorial.html) in the *Amazon Cognito Developer Guide*\.
 + Delete the Secrets Manager secret you created\. For more information, see [Delete a secret](https://docs.aws.amazon.com/secretsmanager/latest/userguide/manage_delete-secret.html) in the *AWS Secrets Manager User Guide*\.

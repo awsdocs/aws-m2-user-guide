@@ -13,7 +13,9 @@ You can use AWS Mainframe Modernization to help you efficiently create and manag
 + [Pricing](#m2-pricing)
 
 **Note**  
-Before you start your mainframe modernization project, we recommend that you learn about the [AWS Migration Acceleration Program \(MAP\) for Mainframe](https://aws.amazon.com/migration-acceleration-program/mainframe/) or contact [AWS mainframe specialists](mailto: mainframe@amazon.com) to learn about the required steps for modernizing a mainframe application\.
+Have you engaged with AWS Mainframe Migration Competency Partners or AWS Professional Services for your mainframe modernization project? If not, we highly recommend that you engage experts for your project\.  
+[AWS Mainframe Modernization Competency Partners](https://aws.amazon.com/mainframe/partner-solutions/)
+[AWS Professional Services](https://aws.amazon.com/professional-services/)
 
 The features and use cases of AWS Mainframe Modernization support an evolutionary modernization approach, which provides short\-term wins by improving agility and plenty of opportunities to optimize and innovate later on\. For more information, see [Modernization approach](modernization-m2.md)\.
 
@@ -22,10 +24,14 @@ The features and use cases of AWS Mainframe Modernization support an evolutionar
 AWS Mainframe Modernization features support the following use cases:
 + Assess: AWS Mainframe Modernization's assessment capability can help you assess, scope, and plan a migration and modernization project\.
 + Refactor: powered by Blu Age, you can use refactoring to convert legacy application programming languages, to create macroservices or microservices, and to modernize user interfaces \(UIs\) and application software stacks\.
+
+  AWS Blu Insights is now available from the AWS Management Console through single sign\-on\. You do not have to manage separate AWS Blu Insights credentials any longer\. You can access both the AWS Blu Age Codebase and Transformation Center features directly from the AWS Management Console\.
 + Replatform: powered by the Micro Focus Enterprise solution, you can port the application where much of the application source code is recompiled without changes\.
 + Developer IDE: AWS Mainframe Modernization offers an on\-demand integrated development environment \(IDE\) so developers can write code quicker with smart editing and debugging, instant code compilation, and unit testing\.
 + Managed runtime: The AWS Mainframe Modernization managed execution environment continually monitors your clusters to keep enterprise workloads running with self\-healing compute and automated scaling\.
 + Continuous integration and delivery \(CI/CD\): AWS Mainframe Modernization's CI/CD feature helps application development teams deliver code changes more frequently and reliably, which accelerates migration speed, increases quality, and helps reduce time\-to\-market for releasing new business functions\.
++ Integrations with other AWS services: AWS Mainframe Modernization supports AWS CloudFormation, AWS PrivateLink, and AWS Key Management Service for repeatable deployment and greater security and compliance\.
++ Expanded availability: AWS Mainframe Modernization is now available in US East \(Ohio\), US West \(N\. California\), Asia Pacific \(Mumbai\), Asia Pacific \(Seoul\), Asia Pacific \(Singapore\), Asia Pacific \(Tokyo\), Europe \(London\), and Europe \(Paris\)\.
 
 For more information on AWS Mainframe Modernization features, see [http://aws.amazon.com/mainframe-modernization/features/](http://aws.amazon.com/mainframe-modernization/features/)\.
 
@@ -37,13 +43,15 @@ The Replatforming pattern, powered by Micro Focus Enterprise suite, is focused o
 
 ## How to get started with AWS Mainframe Modernization<a name="servicename-how-to-get-started"></a>
 
-Try it\! We offer tutorials and sample applications to help you get a sense of what AWS Mainframe Modernization offers\. Choose either the [Tutorial: Managed Runtime for Blu Age](tutorial-runtime-ba.md) or the [Tutorial: Managed Runtime for Micro Focus](tutorial-runtime.md) for a complete, step\-by\-step tutorial\. If you are interested in automated refactoring, check out the Blu Age tools at [BluInsights](https://bluinsights.io/)\. You can also set up AppStream 2\.0 to access the Blu Age Developer IDE, or the Micro Focus Enterprise Analyzer and Micro Focus Enterprise Developer tools\.
+Try it\! We offer tutorials and sample applications to help you get a sense of what AWS Mainframe Modernization offers\. Choose either the [Tutorial: Managed Runtime for Blu Age](tutorial-runtime-ba.md) or the [Tutorial: Managed runtime for Micro Focus](tutorial-runtime-mf.md) for a complete, step\-by\-step tutorial\.
+
+ If you are interested in automated refactoring, check out the Blu Age tools at [BluInsights](https://bluinsights.aws/)\. You can also set up AppStream 2\.0 to access the Blu Age Developer IDE, or the Micro Focus Enterprise Analyzer and Micro Focus Enterprise Developer tools\.
 
 The tutorials and sample applications only give you a sense of what AWS Mainframe Modernization provides\. When you are ready to start a modernization project, see [Modernization approach](modernization-m2.md) for details about the stages and tasks of a modernization project\.
 
 ## Related services<a name="related-services"></a>
 
-In addition to BluInsights for automated refactoring, you can use the following AWS services with AWS Mainframe Modernization\.
+In addition to Blu Insights for automated refactoring, you can use the following AWS services with AWS Mainframe Modernization\.
 + Amazon RDS for hosting your migrated databases\.
 + Amazon S3 for storing application binaries and definition files\.
 + Amazon FSx or Amazon EFS for storing application data\.
@@ -65,3 +73,5 @@ If you are a first\-time user of AWS Mainframe Modernization, we recommend that 
 ## Pricing<a name="m2-pricing"></a>
 
 AWS Mainframe Modernization charges for the usage of instances supporting the managed runtime environments\. In addition, AWS Mainframe Modernization offers some tools without additional charges\. You are responsible for fees incurred for other AWS services that you use in connection with AWS Mainframe Modernization\. AWS will provide 30 days' notice before any pricing changes take effect for use of AWS Mainframe Modernization\. For more information, see [Mainframe Modernization with AWS](http://aws.amazon.com/mainframe/)\.
+
+With AWS Blu Insights, you pay for Transformation Center usage\. For more information, see [AWS Mainframe Modernization pricing](http://aws.amazon.com/https://aws.amazon.com/mainframe-modernization/pricing/)\.

@@ -18,7 +18,7 @@ For an ongoing record of events in your AWS account, including events for AWS Ma
 All AWS Mainframe Modernization actions are logged by CloudTrail and are documented in the [AWS Mainframe Modernization API Reference](https://docs.aws.amazon.com/m2/latest/APIReference/)\. For example, calls to the  `CreateApplication`, `CreateEnvironment` and `CreateDeployment` actions generate entries in the CloudTrail log files\.
 
 Every event or log entry contains information about who generated the request\. The identity information helps you determine the following:
-+ Whether the request was made with root or AWS Identity and Access Management \(IAM\) user credentials\.
++ Whether the request was made with root user or user credentials\.
 + Whether the request was made with temporary security credentials for a role or federated user\.
 + Whether the request was made by another AWS service\.
 

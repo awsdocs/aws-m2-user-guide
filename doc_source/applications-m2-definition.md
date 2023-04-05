@@ -104,7 +104,7 @@ Specify the port you will use to access the application through the AWS Mainfram
 ```
 
 **port**  
-Required\. You can use any available port, although we recommend using the range from 8192 to 8199\. Make sure there’s no other listeners or applications operating on this port\.
+Required\. You can use any available port except for the well\-known ports of 0 to 1023\. We recommend using the range from 8192 to 8199\. Make sure there’s no other listeners or applications operating on this port\.
 
 **type**  
 Required\. Currently, only `http` is supported\.
@@ -148,14 +148,14 @@ Specifies the properties of the database used with the application\. The databas
 + `nb-threads` \- Optional\. Specifies how many dedicated threads are used for the write\-behind mechanism that the blusam engine relies on\. The default is 8\.
 + `batch-size` \- Optional\. Specifies the threshold that the write\-behind mechanism uses to start batch storage operations\. The threshold represents the number of modified records that will start a batch storage operation to ensure that modified records are persisted\. The trigger itself is based on a combination of batch\-size and an elapsed time of one second, whichever is reached first\. The default is 10000\.
 + `name` \- Optional\. Specifies the name of the database\.
-+ `secret-manager-arn` \- Specifies the Amazon Resource Name \(ARN\) of the secret that contains the database credentials\. For more information, see [Step 3: Create and configure an AWS Secrets Manager database secret](tutorial-runtime.md#tutorial-runtime-mf-secret)\.
++ `secret-manager-arn` \- Specifies the Amazon Resource Name \(ARN\) of the secret that contains the database credentials\. For more information, see [Step 3: Create and configure an AWS Secrets Manager database secret](tutorial-runtime-mf.md#tutorial-runtime-mf-secret)\.
 
 **redis**  
 Specifies the properties of the Redis cache that the application uses to store temporary data that it needs in a central location to improve performance\. We recommend that you both encrypt and password\-protect the Redis cache\.  
 + `hostname` \- Specifies the location of the Redis cache\.
 + `port` \- Specifies the port, typically 6379, where the Redis cache sends and receives communication\.
 + `useSsl` \- Specifies whether the Redis cache is encrypted\. If the cache is not encrypted, set `useSsl` to false\.
-+ `secret-manager-arn` \- Specifies the Amazon Resource Name \(ARN\) of the secret that contains the Redis cache password\. If the Redis cache is not password\-protected, do not specify `secret-manager-arn`\. For more information, see [Step 3: Create and configure an AWS Secrets Manager database secret](tutorial-runtime.md#tutorial-runtime-mf-secret)\.
++ `secret-manager-arn` \- Specifies the Amazon Resource Name \(ARN\) of the secret that contains the Redis cache password\. If the Redis cache is not password\-protected, do not specify `secret-manager-arn`\. For more information, see [Step 3: Create and configure an AWS Secrets Manager database secret](tutorial-runtime-mf.md#tutorial-runtime-mf-secret)\.
 
 ### Amazon Cognito authentication and authorization handler \- optional<a name="applications-m2-definition-ba-details-cognito"></a>
 
@@ -198,11 +198,8 @@ The following sample definition section is for the Micro Focus runtime engine, a
     "definition" : {
         "listeners": [{
             "port": 5101,
-            "type": "TN3270"
+            "type": "tn3270"
         }],
-        "tls-configuration" : {
-            "enable-tls": true
-        },        
         "dataset-location": {
             "db-locations": [{
                 "name": "Database1",
@@ -246,19 +243,19 @@ Specify a listener using the following structure:
 ```
 "listeners": [{
     "port": 5101,
-    "type": "TN3270"
+    "type": "tn3270"
 }],
 ```
 
 **port**  
-For TN3270, the default is 5101\. For other types of service listeners, the port varies\. Each listener should have a distinctive port\. Listeners should not share ports\. For more information, see [Listener Control](https://www.microfocus.com/documentation/enterprise-developer/ed70/ES-UNIX/GUID-63F6D8B0-024F-48D1-956A-1E079E4BD891.html) in the *Micro Focus Enterprise Server* documentation\.
+For tn3270, the default is 5101\. For other types of service listeners, the port varies\. You can use any available port except for the well\-known ports of 0 to 1023\. Each listener should have a distinctive port\. Listeners should not share ports\. For more information, see [Listener Control](https://www.microfocus.com/documentation/enterprise-developer/ed70/ES-UNIX/GUID-63F6D8B0-024F-48D1-956A-1E079E4BD891.html) in the *Micro Focus Enterprise Server* documentation\.
 
 **type**  
 Specifies the type of service listener\. For more information, see [Listeners](https://www.microfocus.com/documentation/enterprise-developer/ed70/ES-UNIX/HTPHMDSAL100.html) in the *Micro Focus Enterprise Server* documentation\.
 
-### Dataset locations \- required<a name="applications-m2-definition-mf-details-datasets"></a>
+### Data set locations \- required<a name="applications-m2-definition-mf-details-datasets"></a>
 
-Specify the dataset location using the following structure\.
+Specify the data set location using the following structure\.
 
 ```
 "dataset-location": {
@@ -270,8 +267,8 @@ Specify the dataset location using the following structure\.
 ```
 
 **db\-locations**  
-Specifies the details of the database or databases containing the imported datasets for a migrated application\. Currently, AWS Mainframe Modernization supports only datasets from a single VSAM database\.  
-+ `name` \- Specifies the name of the database instance that contains the data from the dataset\.
+Specifies the location of the data sets that the migrated application creates\. Currently, AWS Mainframe Modernization supports only data sets from a single VSAM database\.  
++ `name` \- Specifies the name of the database instance that contains the data sets that the migrated application creates\.
 + `secret-manager-arn` \- Specifies the Amazon Resource Name \(ARN\) of the secret that contains the database credentials\.
 
 ### Amazon Cognito authentication and authorization handler \- optional<a name="applications-m2-definition-mf-details-cognito"></a>
@@ -328,7 +325,7 @@ Specifies a batch initiator that starts when the migrated application starts suc
  }
 ```
 For more information, see [To define a batch initiator or printer SEP](https://www.microfocus.com/documentation/enterprise-developer/ed70/ES-UNIX/HHMTTHJCLE08.html) in the *Micro Focus Enterprise Server* documentation\.  
-+ `classes` \- Specifies the job classes that the initiator can run\.
++ `classes` \- Specifies the job classes that the initiator can run\. You can use up to 36 characters\. You can use the following characters: A\-Z or 0\-9\.
 + `description` \- Describes what the initiator is for\.
 + `jcl-file-location` \- Specifies the location of the JCL files that are required by the batch jobs the migrated application runs\.
 
@@ -351,20 +348,7 @@ Specifies the location of the CICS transaction program files\.
 Specifies the location of the CICS resource definition \(CSD\) file for this application\. For more information, see [CICS Resource Definitions](https://www.microfocus.com/documentation/enterprise-developer/ed80/ES-UNIX/HRMTRHCSDS01.html) in the *Micro Focus Enterprise Sevrver* documentation\.
 
 **system\-initialization\-table**  
-Specifies the system initialization table \(SIT\) that the migrated application uses\. For more information, see [CICS Resource Definitions](https://www.microfocus.com/documentation/enterprise-developer/ed70/ES-UNIX/HRMTRHCSDS01.html) in the *Micro Focus Enterprise Server* documentation\. 
-
-### TLS Configuration \- optional<a name="applications-m2-definition-mf-details-tls"></a>
-
-Specify whether TLS is enabled for the application\.
-
-```
-  "tls-configuration" : {
-            "enable-tls": true
-        }
-```
-
-**enable\-tls**  
-Required\. Set to `true` if your application uses TLS\.
+Specifies the system initialization table \(SIT\) that the migrated application uses\. The name of the SIT table can be up to 8 characters\. You can use A\-Z, 0\-9, $, @, and \#\. For more information, see [CICS Resource Definitions](https://www.microfocus.com/documentation/enterprise-developer/ed70/ES-UNIX/HRMTRHCSDS01.html) in the *Micro Focus Enterprise Server* documentation\. 
 
 ### XA resources \- required<a name="applications-m2-definition-mf-details-xa"></a>
 
